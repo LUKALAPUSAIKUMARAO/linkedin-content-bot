@@ -1,6 +1,7 @@
 import os
 import json
-from datetime import datetime, timedelta
+import re
+from datetime import datetime, timedelta, UTC
 from pathlib import Path
 from groq import Groq
 
@@ -28,10 +29,14 @@ except Exception:
     trend_titles = []
 
 # Build next week's dates (Mon–Sun)
-today = datetime.utcnow()
+today = datetime.now(UTC)
 days_until_monday = (7 - today.weekday()) % 7 or 7
 next_monday = today + timedelta(days=days_until_monday)
-week_days = [(next_monday + timedelta(days=i)).strftime("%A %d %b") for i in range(7)]
+
+week_days = [
+    (next_monday + timedelta(days=i)).strftime("%A %d %b")
+    for i in range(7)
+]
 
 POST_FORMATS = [
     "Numbered list of insights (5-7 points)",
@@ -50,75 +55,143 @@ YOUR BACKGROUND:
 {YOUR_PERSONA}
 
 YOUR WRITING RULES (follow strictly):
-- First line is the hook — make it bold, specific, or counterintuitive. No "I'm excited to share".
-- Write like a practitioner, not a content creator. Real commands, real tools, real tradeoffs.
-- Never use: "game-changer", "leverage", "delve", "unlock", "journey", "excited to share", "thrilled"
-- Keep sentences short. Use line breaks generously for readability.
-- Always end with a genuine question that invites discussion.
-- 3-5 hashtags only. Always include #DevOps. Keep hashtags at the very end.
-- Target length: 150-280 words per post.
+- First line is the hook — make it bold, specific, or counterintuitive
+- Write like a practitioner, not a content creator
+- Use real commands, tools, tradeoffs, failures
+- Never use:
+  "game-changer"
+  "leverage"
+  "delve"
+  "unlock"
+  "journey"
+  "excited to share"
+  "thrilled"
 
-TRENDING THIS WEEK (use as inspiration for relevance, don't copy directly):
+- Keep sentences short
+- Use line breaks generously
+- Always end with a genuine discussion question
+- 3-5 hashtags only
+- Always include #DevOps
+- Hashtags at the very end
+- Target length: 150-280 words
+
+VERY IMPORTANT JSON RULES:
+- Return ONLY VALID JSON
+- No markdown
+- No ```json
+- No explanations
+- Escape all quotes properly
+- No tabs
+- No control characters
+- Output must work directly with Python json.loads()
+
+TRENDING THIS WEEK:
 {chr(10).join(f"- {t}" for t in trend_titles) if trend_titles else "- General DevOps topics"}
 
-POSTING SCHEDULE AND FORMATS:
+POSTING SCHEDULE:
 {chr(10).join(f"Day {i+1} ({d}): {POST_FORMATS[i]}" for i, d in enumerate(week_days))}
 
-Generate 7 LinkedIn posts, one per day. Cover different topics across:
-Kubernetes, CI/CD pipelines, Terraform/IaC, AWS/Cloud, Linux, Monitoring,
-Platform Engineering, SRE, GitHub Actions, career growth.
+Generate 7 LinkedIn posts.
 
-Return ONLY raw JSON — no markdown, no code fences, no explanation. Just the JSON object.
+JSON FORMAT:
 
 {{
   "week_start": "{week_days[0]}",
   "posts": [
     {{
       "day": "Monday 23 Jun",
-      "topic": "short topic label e.g. Kubernetes networking",
-      "hook": "just the first line of the post",
-      "body": "the complete post text including hook, all content, CTA question, and hashtags",
-      "hashtags": "#Tag1 #Tag2 #DevOps",
-      "image_prompt": "Detailed prompt for AI image generator. Dark background. Specify: style (terminal/dashboard/architecture diagram/observability UI), colors (dark bg with green or cyan text), specific elements to include. Example: A dark terminal window showing kubectl get pods output with colorized status columns, green SUCCESS labels, subtle grid lines, clean monospace font, professional DevOps aesthetic.",
+      "topic": "Kubernetes networking",
+      "hook": "Hook line",
+      "body": "Complete post text",
+      "hashtags": "#DevOps #Kubernetes",
+      "image_prompt": "Detailed AI image prompt",
       "word_count": 0
     }}
   ]
 }}
 """
 
+def clean_json_response(raw: str) -> str:
+    """
+    Cleans Groq response and extracts valid JSON.
+    """
+
+    raw = raw.strip()
+
+    # Remove markdown fences
+    raw = raw.replace("```json", "")
+    raw = raw.replace("```", "")
+    raw = raw.strip()
+
+    # Extract JSON object
+    match = re.search(r"\{.*\}", raw, re.DOTALL)
+
+    if not match:
+        raise ValueError("No valid JSON object found in response")
+
+    cleaned = match.group(0)
+
+    # Remove invalid control chars
+    cleaned = re.sub(r"[\x00-\x1F\x7F]", "", cleaned)
+
+    return cleaned
+
+
 def generate():
     print("Calling Groq API...")
+
     response = client.chat.completions.create(
         model="llama-3.3-70b-versatile",
-        messages=[{"role": "user", "content": PROMPT}],
-        temperature=0.82,
+        messages=[
+            {
+                "role": "user",
+                "content": PROMPT
+            }
+        ],
+        temperature=0.8,
         max_tokens=7000,
     )
 
-    raw = response.choices[0].message.content.strip()
+    raw = response.choices[0].message.content
 
-    # Strip markdown fences if model adds them
-    if "```" in raw:
-        parts = raw.split("```")
-        for part in parts:
-            part = part.strip()
-            if part.startswith("json"):
-                part = part[4:].strip()
-            if part.startswith("{"):
-                raw = part
-                break
+    print("\n========== RAW RESPONSE ==========\n")
+    print(raw[:3000])
+    print("\n==================================\n")
 
-    data = json.loads(raw)
+    try:
+        cleaned_json = clean_json_response(raw)
 
-    for post in data["posts"]:
+        data = json.loads(cleaned_json)
+
+    except Exception as e:
+        print("FAILED TO PARSE JSON")
+        print(e)
+
+        Path("outputs/debug_raw_response.txt").write_text(raw)
+
+        raise
+
+    # Enhance metadata
+    for post in data.get("posts", []):
+
         post["word_count"] = len(post["body"].split())
-        post["status"] = "Draft"
-        post["generated_at"] = datetime.utcnow().isoformat()
 
-    Path("outputs/posts.json").write_text(json.dumps(data, indent=2))
-    print(f"Generated {len(data['posts'])} posts")
+        post["status"] = "Draft"
+
+        post["generated_at"] = datetime.now(UTC).isoformat()
+
+    # Save final output
+    Path("outputs/posts.json").write_text(
+        json.dumps(data, indent=2, ensure_ascii=False)
+    )
+
+    print(f"\nGenerated {len(data['posts'])} posts\n")
+
     for p in data["posts"]:
-        print(f"  {p['day']}: {p['topic']} ({p['word_count']} words)")
+        print(
+            f"  {p['day']} | {p['topic']} | {p['word_count']} words"
+        )
+
 
 if __name__ == "__main__":
     generate()
