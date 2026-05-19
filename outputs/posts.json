@@ -1,0 +1,82 @@
+{
+  "week_start": "Monday 25 May",
+  "posts": [
+    {
+      "day": "Monday 25 May",
+      "topic": "DevOps insights",
+      "hook": "**I've learned more from my DevOps failures than my successes**",
+      "body": "Here are 6 key insights: 1. Infrastructure as code is crucial.2. Kubernetes simplifies container management.3. GitOps reduces configuration errors.4. Automation saves time and reduces toil.5. Monitoring is essential for proactive issue detection.6. Collaboration between teams is vital.What are your most important DevOps insights?",
+      "hashtags": "#DevOps #Kubernetes",
+      "image_prompt": "A photo of a person sitting in front of a computer with a mix of frustrated and relieved expressions",
+      "word_count": 43,
+      "status": "Draft",
+      "generated_at": "2026-05-19T11:45:34.636034+00:00"
+    },
+    {
+      "day": "Tuesday 26 May",
+      "topic": "What nobody tells you about GitOps",
+      "hook": "** GitOps is not just about infrastructure as code**",
+      "body": "It's about culture and process. It requires buy-in from the entire team.It needs a clear understanding of what can be automated.It demands a high degree of discipline.It's not a replacement for traditional ops, but an evolution.What are the most common misconceptions about GitOps you've encountered?",
+      "hashtags": "#DevOps #GitOps",
+      "image_prompt": "A photo of a team collaborating in front of a whiteboard",
+      "word_count": 45,
+      "status": "Draft",
+      "generated_at": "2026-05-19T11:45:34.636052+00:00"
+    },
+    {
+      "day": "Wednesday 27 May",
+      "topic": "Before and after Terraform",
+      "hook": "**Before Terraform, our infrastructure was a mess**",
+      "body": "We used to spend hours configuring servers manually.Now, with Terraform, we can spin up entire environments in minutes.Our infrastructure is version-controlled and automated.We've reduced errors and increased efficiency.What's been your experience with Terraform or other infrastructure as code tools?",
+      "hashtags": "#DevOps #Terraform",
+      "image_prompt": "A before-and-after image of a messy room vs a clean and organized room",
+      "word_count": 39,
+      "status": "Draft",
+      "generated_at": "2026-05-19T11:45:34.636057+00:00"
+    },
+    {
+      "day": "Thursday 28 May",
+      "topic": "Myth vs Reality in DevOps",
+      "hook": "**DevOps is not a replacement for traditional ITIL practices**",
+      "body": "Myth: DevOps means no more ITIL.Reality: DevOps complements ITIL.Myth: DevOps is only for developers.Reality: DevOps is for the entire team.Myth: DevOps means no more monitoring.Reality: Monitoring is more important than ever.What are some common DevOps myths you've encountered?",
+      "hashtags": "#DevOps #ITIL",
+      "image_prompt": "A photo of a person holding a myth-busting hammer",
+      "word_count": 38,
+      "status": "Draft",
+      "generated_at": "2026-05-19T11:45:34.636061+00:00"
+    },
+    {
+      "day": "Friday 29 May",
+      "topic": "5 tools that changed how I work",
+      "hook": "**These 5 tools have revolutionized my DevOps workflow**",
+      "body": "1. kubectl for Kubernetes management.2. terraform for infrastructure as code.3. git for version control.4. helm for package management.5. aws cli for AWS management.What are your go-to DevOps tools?",
+      "hashtags": "#DevOps #Kubernetes",
+      "image_prompt": "A photo of a person sitting in front of a computer with a happy expression",
+      "word_count": 28,
+      "status": "Draft",
+      "generated_at": "2026-05-19T11:45:34.636065+00:00"
+    },
+    {
+      "day": "Saturday 30 May",
+      "topic": "A story of a DevOps failure",
+      "hook": "**I once caused a major outage due to a simple mistake**",
+      "body": "I had forgotten to update the dependencies in our Kubernetes deployment.The application crashed, and we lost hours of downtime.I learned the importance of automation and testing.I also learned the value of owning up to mistakes and communicating with the team.What's the most important lesson you've learned from a DevOps failure?",
+      "hashtags": "#DevOps #Kubernetes",
+      "image_prompt": "A photo of a person with a mix of sad and relieved expressions",
+      "word_count": 50,
+      "status": "Draft",
+      "generated_at": "2026-05-19T11:45:34.636069+00:00"
+    },
+    {
+      "day": "Sunday 31 May",
+      "topic": "Career advice for DevOps engineers",
+      "hook": "**To succeed in DevOps, you need to be a lifelong learner**",
+      "body": "Stay up-to-date with the latest tools and technologies.Practice automation and scripting.Learn about different cloud providers and their services.Join online communities and forums to network with other DevOps engineers.What advice would you give to someone starting their DevOps career?",
+      "hashtags": "#DevOps #CareerAdvice",
+      "image_prompt": "A photo of a person reading a book or attending a conference",
+      "word_count": 38,
+      "status": "Draft",
+      "generated_at": "2026-05-19T11:45:34.636073+00:00"
+    }
+  ]
+}
