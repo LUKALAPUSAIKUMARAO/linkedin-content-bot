@@ -1,197 +1,257 @@
 import os
 import json
-import re
-from datetime import datetime, timedelta, UTC
+import time
+import requests
 from pathlib import Path
-from groq import Groq
+from datetime import datetime
 
-client = Groq(api_key=os.environ["GROQ_API_KEY"])
+TELEGRAM_TOKEN  = os.environ["TELEGRAM_BOT_TOKEN"]
+TELEGRAM_CHAT_ID = os.environ["TELEGRAM_CHAT_ID"]
+HF_API_KEY      = os.environ["HF_API_KEY"]
+TELEGRAM_API    = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}"
 
-# ─────────────────────────────────────────────
-# FILL THIS IN — the only thing you edit here
-# ─────────────────────────────────────────────
-YOUR_PERSONA = """
-- 4 years of experience in DevOps and Cloud Infrastructure
-- Working as a DevOps Engineer at a mid-sized product company
-- Primary stack: Kubernetes (EKS), Terraform, GitHub Actions, AWS, Python, Helm
-- Have worked with cross-functional teams of 10-30 engineers
-- Strong opinions on GitOps, infrastructure as code, and platform engineering
-- Passionate about SRE practices and reducing toil
-- Based in Hyderabad, India
-"""
-# ─────────────────────────────────────────────
+IMAGE_DIR = Path("outputs/images")
+IMAGE_DIR.mkdir(parents=True, exist_ok=True)
 
-# Load trends
-try:
-    trends_raw = json.loads(Path("outputs/trends.json").read_text())
-    trend_titles = trends_raw.get("trends", [])[:10]
-except Exception:
-    trend_titles = []
-
-# Build next week's dates (Mon–Sun)
-today = datetime.now(UTC)
-days_until_monday = (7 - today.weekday()) % 7 or 7
-next_monday = today + timedelta(days=days_until_monday)
-
-week_days = [
-    (next_monday + timedelta(days=i)).strftime("%A %d %b")
-    for i in range(7)
+# ─────────────────────────────────────────────────────────
+# Hugging Face models — tried in order, first success wins
+# All are free on the HF Inference API
+# ─────────────────────────────────────────────────────────
+HF_MODELS = [
+    "black-forest-labs/FLUX.1-schnell",       # Best quality, fast
+    "stabilityai/stable-diffusion-xl-base-1.0",  # Reliable fallback
+    "runwayml/stable-diffusion-v1-5",            # Last resort fallback
 ]
 
-POST_FORMATS = [
-    "Numbered list of insights (5-7 points)",
-    "What nobody tells you about X",
-    "Before vs after — show a transformation",
-    "Myth vs Reality (bust 3-4 common misconceptions)",
-    "5 tools/commands that changed how I work",
-    "Story: what happened, what I learned (incident or project)",
-    "Career advice for DevOps engineers"
-]
+HF_HEADERS = {
+    "Authorization": f"Bearer {HF_API_KEY}",
+    "Content-Type": "application/json",
+    "x-wait-for-model": "true"   # wait instead of 503 if model is loading
+}
 
-PROMPT = f"""
-You are a senior DevOps engineer writing LinkedIn posts from personal experience.
+# ─────────────────────────────────────────────────────────
+# IMAGE GENERATION
+# ─────────────────────────────────────────────────────────
 
-YOUR BACKGROUND:
-{YOUR_PERSONA}
-
-YOUR WRITING RULES (follow strictly):
-- First line is the hook — make it bold, specific, or counterintuitive
-- Write like a practitioner, not a content creator
-- Use real commands, tools, tradeoffs, failures
-- Never use:
-  "game-changer"
-  "leverage"
-  "delve"
-  "unlock"
-  "journey"
-  "excited to share"
-  "thrilled"
-
-- Keep sentences short
-- Use line breaks generously
-- Always end with a genuine discussion question
-- 3-5 hashtags only
-- Always include #DevOps
-- Hashtags at the very end
-- Target length: 150-280 words
-
-VERY IMPORTANT JSON RULES:
-- Return ONLY VALID JSON
-- No markdown
-- No ```json
-- No explanations
-- Escape all quotes properly
-- No tabs
-- No control characters
-- Output must work directly with Python json.loads()
-
-TRENDING THIS WEEK:
-{chr(10).join(f"- {t}" for t in trend_titles) if trend_titles else "- General DevOps topics"}
-
-POSTING SCHEDULE:
-{chr(10).join(f"Day {i+1} ({d}): {POST_FORMATS[i]}" for i, d in enumerate(week_days))}
-
-Generate 7 LinkedIn posts.
-
-JSON FORMAT:
-
-{{
-  "week_start": "{week_days[0]}",
-  "posts": [
-    {{
-      "day": "Monday 23 Jun",
-      "topic": "Kubernetes networking",
-      "hook": "Hook line",
-      "body": "Complete post text",
-      "hashtags": "#DevOps #Kubernetes",
-      "image_prompt": "Detailed AI image prompt",
-      "word_count": 0
-    }}
-  ]
-}}
-"""
-
-def clean_json_response(raw: str) -> str:
+def build_devops_prompt(raw_prompt: str, topic: str) -> str:
     """
-    Cleans Groq response and extracts valid JSON.
+    Strengthen the raw AI-generated prompt with DevOps visual style instructions.
+    Hugging Face models respond better to detailed style descriptors.
     """
-
-    raw = raw.strip()
-
-    # Remove markdown fences
-    raw = raw.replace("```json", "")
-    raw = raw.replace("```", "")
-    raw = raw.strip()
-
-    # Extract JSON object
-    match = re.search(r"\{.*\}", raw, re.DOTALL)
-
-    if not match:
-        raise ValueError("No valid JSON object found in response")
-
-    cleaned = match.group(0)
-
-    # Remove invalid control chars
-    cleaned = re.sub(r"[\x00-\x1F\x7F]", "", cleaned)
-
-    return cleaned
-
-
-def generate():
-    print("Calling Groq API...")
-
-    response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
-        messages=[
-            {
-                "role": "user",
-                "content": PROMPT
-            }
-        ],
-        temperature=0.8,
-        max_tokens=7000,
+    style_suffix = (
+        "dark background, professional tech aesthetic, "
+        "high resolution, clean layout, modern UI design, "
+        "no text overlays, no watermarks, ultra detailed"
     )
+    return f"{raw_prompt}. {style_suffix}"
 
-    raw = response.choices[0].message.content
 
-    print("\n========== RAW RESPONSE ==========\n")
-    print(raw[:3000])
-    print("\n==================================\n")
+def generate_image_hf(prompt: str, filename: str) -> Path | None:
+    """Try each HF model in order. Return saved path on first success."""
+    enhanced_prompt = build_devops_prompt(prompt, filename)
+    save_path = IMAGE_DIR / filename
 
+    for model in HF_MODELS:
+        api_url = f"https://api-inference.huggingface.co/models/{model}"
+        print(f"  Trying model: {model.split('/')[-1]}")
+        try:
+            response = requests.post(
+                api_url,
+                headers=HF_HEADERS,
+                json={
+                    "inputs": enhanced_prompt,
+                    "parameters": {
+                        "width": 1200,
+                        "height": 628,       # LinkedIn ideal ratio 1.91:1
+                        "num_inference_steps": 20,
+                        "guidance_scale": 7.5
+                    }
+                },
+                timeout=90
+            )
+
+            if response.status_code == 200:
+                content_type = response.headers.get("content-type", "")
+                if "image" in content_type or len(response.content) > 5000:
+                    save_path.write_bytes(response.content)
+                    size_kb = len(response.content) // 1024
+                    print(f"  ✓ Image saved: {filename} ({size_kb} KB)")
+                    return save_path
+                else:
+                    # Model returned JSON error instead of image
+                    try:
+                        err = response.json()
+                        print(f"  ✗ Model error: {err.get('error', 'unknown')}")
+                    except Exception:
+                        print(f"  ✗ Unexpected response (not an image)")
+
+            elif response.status_code == 503:
+                print(f"  ✗ Model loading (503) — trying next model")
+
+            elif response.status_code == 429:
+                print(f"  ✗ Rate limited — waiting 15s then trying next model")
+                time.sleep(15)
+
+            else:
+                print(f"  ✗ HTTP {response.status_code}")
+
+        except requests.exceptions.Timeout:
+            print(f"  ✗ Timeout after 90s — trying next model")
+        except Exception as e:
+            print(f"  ✗ Exception: {e}")
+
+        time.sleep(3)  # brief pause between model attempts
+
+    print(f"  ✗ All models failed for {filename}")
+    return None
+
+
+# ─────────────────────────────────────────────────────────
+# TELEGRAM HELPERS
+# ─────────────────────────────────────────────────────────
+
+def tg_send_message(text: str) -> bool:
+    """Send plain HTML text message."""
     try:
-        cleaned_json = clean_json_response(raw)
-
-        data = json.loads(cleaned_json)
-
-    except Exception as e:
-        print("FAILED TO PARSE JSON")
-        print(e)
-
-        Path("outputs/debug_raw_response.txt").write_text(raw)
-
-        raise
-
-    # Enhance metadata
-    for post in data.get("posts", []):
-
-        post["word_count"] = len(post["body"].split())
-
-        post["status"] = "Draft"
-
-        post["generated_at"] = datetime.now(UTC).isoformat()
-
-    # Save final output
-    Path("outputs/posts.json").write_text(
-        json.dumps(data, indent=2, ensure_ascii=False)
-    )
-
-    print(f"\nGenerated {len(data['posts'])} posts\n")
-
-    for p in data["posts"]:
-        print(
-            f"  {p['day']} | {p['topic']} | {p['word_count']} words"
+        r = requests.post(
+            f"{TELEGRAM_API}/sendMessage",
+            json={
+                "chat_id": TELEGRAM_CHAT_ID,
+                "text": text[:4096],
+                "parse_mode": "HTML",
+                "disable_web_page_preview": True
+            },
+            timeout=15
         )
+        ok = r.status_code == 200
+        if not ok:
+            print(f"  Telegram msg error: {r.text[:200]}")
+        return ok
+    except Exception as e:
+        print(f"  Telegram msg exception: {e}")
+        return False
+
+
+def tg_send_photo(image_path: Path, caption: str) -> bool:
+    """Send image with caption. Caption max 1024 chars."""
+    try:
+        with open(image_path, "rb") as f:
+            r = requests.post(
+                f"{TELEGRAM_API}/sendPhoto",
+                data={
+                    "chat_id": TELEGRAM_CHAT_ID,
+                    "caption": caption[:1024],
+                    "parse_mode": "HTML"
+                },
+                files={"photo": ("image.jpg", f, "image/jpeg")},
+                timeout=30
+            )
+        ok = r.status_code == 200
+        if not ok:
+            print(f"  Telegram photo error: {r.text[:200]}")
+        return ok
+    except Exception as e:
+        print(f"  Telegram photo exception: {e}")
+        return False
+
+
+# ─────────────────────────────────────────────────────────
+# MAIN
+# ─────────────────────────────────────────────────────────
+
+def main():
+    posts_path = Path("outputs/posts.json")
+    if not posts_path.exists():
+        tg_send_message("❌ <b>Error:</b> posts.json not found. Check GitHub Actions logs.")
+        return
+
+    data   = json.loads(posts_path.read_text())
+    posts  = data.get("posts", [])
+    week   = data.get("week_start", datetime.utcnow().strftime("%d %b %Y"))
+
+    print(f"\n{'='*52}")
+    print(f"  LinkedIn bot — week of {week}")
+    print(f"  {len(posts)} posts to process")
+    print(f"{'='*52}\n")
+
+    # ── Header message ──
+    tg_send_message(
+        f"🚀 <b>LinkedIn Content Ready — Week of {week}</b>\n\n"
+        f"✍️ {len(posts)} posts generated\n"
+        f"🎨 Generating images via Hugging Face (FLUX.1)\n"
+        f"📋 All posts saved to Google Sheets\n\n"
+        f"Posts coming up below 👇"
+    )
+    time.sleep(1)
+
+    failed_images = []
+
+    for i, post in enumerate(posts, 1):
+        day      = post.get("day", f"Day {i}")
+        topic    = post.get("topic", "DevOps")
+        hook     = post.get("hook", "")
+        body     = post.get("body", "")
+        hashtags = post.get("hashtags", "#DevOps")
+        prompt   = post.get("image_prompt", f"Professional DevOps dark theme illustration, {topic}")
+        words    = post.get("word_count", 0)
+
+        print(f"\n[{i}/7] {day} — {topic}")
+
+        # ── Generate image ──
+        safe_name = topic.lower().replace(" ", "_").replace("/", "_")[:28]
+        filename  = f"day{i}_{safe_name}.png"
+        img_path  = generate_image_hf(prompt, filename)
+
+        if not img_path:
+            failed_images.append(f"Day {i} — {topic}")
+
+        # ── Telegram caption (shown under the image) ──
+        caption = (
+            f"<b>📅 Day {i} — {day}</b>\n"
+            f"<b>📌 {topic}</b>\n\n"
+            f"<b>Hook:</b> {hook}\n\n"
+            f"<b>Tags:</b> {hashtags}\n"
+            f"<b>Words:</b> {words}"
+        )
+
+        # ── Send image + caption ──
+        if img_path and img_path.exists():
+            sent = tg_send_photo(img_path, caption)
+            if not sent:
+                # image send failed — send text instead
+                tg_send_message(f"⚠️ Image upload failed\n\n{caption}")
+        else:
+            tg_send_message(f"⚠️ <b>No image for Day {i}</b>\n\n{caption}")
+
+        time.sleep(1.5)
+
+        # ── Full post text (separate message — easy to copy-paste into LinkedIn) ──
+        full_text = (
+            f"📋 <b>Day {i} — Full post (copy to LinkedIn):</b>\n\n"
+            f"{body}"
+        )
+        tg_send_message(full_text)
+
+        time.sleep(2)  # respect Telegram rate limit (30 msgs/sec, but be safe)
+
+    # ── Footer summary ──
+    footer_lines = [
+        f"✅ <b>All {len(posts)} posts delivered!</b>\n",
+        "Your Sunday checklist:",
+        "1️⃣ Read each post above — edit if needed",
+        "2️⃣ Save images from this chat",
+        "3️⃣ Open Google Sheets to approve",
+        "4️⃣ Open LinkedIn → schedule all 7 posts\n",
+    ]
+
+    if failed_images:
+        footer_lines.append("⚠️ <b>Image gen failed for:</b>")
+        for f in failed_images:
+            footer_lines.append(f"  • {f} — generate manually on ideogram.ai")
+
+    tg_send_message("\n".join(footer_lines))
+    print("\n✅ Complete — check Telegram.")
 
 
 if __name__ == "__main__":
-    generate()
+    main()
