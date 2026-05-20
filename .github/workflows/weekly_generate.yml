@@ -8,11 +8,14 @@ on:
 jobs:
   generate:
     runs-on: ubuntu-latest
+
     permissions:
       contents: write
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
@@ -44,8 +47,20 @@ jobs:
 
       - name: Commit outputs
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+          mkdir -p outputs
+
           git add outputs/
-          git diff --staged --quiet || git commit -m "Weekly content + images $(date +%Y-%m-%d)"
-          git push
+
+          if ! git diff --staged --quiet; then
+            git commit -m "Weekly content $(date +%Y-%m-%d)"
+          fi
+
+          # Sync with remote branch
+          git fetch origin main
+          git rebase origin/main || true
+
+          # Push latest changes
+          git push origin HEAD:main
