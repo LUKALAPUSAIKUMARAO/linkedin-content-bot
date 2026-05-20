@@ -24,7 +24,7 @@ jobs:
       - name: Fetch trends
         run: python scripts/fetch_trends.py
 
-      - name: Generate posts
+      - name: Generate 7 posts
         run: python scripts/generate_posts.py
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
@@ -35,11 +35,17 @@ jobs:
           GOOGLE_SHEETS_ID: ${{ secrets.GOOGLE_SHEETS_ID }}
           GOOGLE_CREDENTIALS_JSON: ${{ secrets.GOOGLE_CREDENTIALS_JSON }}
 
+      - name: Generate images + send to Telegram
+        run: python scripts/generate_and_send.py
+        env:
+          HF_API_KEY: ${{ secrets.HF_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+
       - name: Commit outputs
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          mkdir -p outputs
           git add outputs/
-          git diff --staged --quiet || git commit -m "Weekly content $(date +%Y-%m-%d)"
+          git diff --staged --quiet || git commit -m "Weekly content + images $(date +%Y-%m-%d)"
           git push
