@@ -26,6 +26,12 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+
+      - name: Test HF models
+        run: python scripts/test_hf.py
+        env:
+          HF_API_KEY: ${{ secrets.HF_API_KEY }}
+
       # ─────────────────────────────────────────
       # DEBUG FILES
       # ─────────────────────────────────────────
