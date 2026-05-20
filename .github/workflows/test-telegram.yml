@@ -1,60 +1,33 @@
-name: Test Telegram Only
+name: 2 — Generate images and send to Telegram
 
 on:
   workflow_dispatch:
+  workflow_run:
+    workflows: ["1 — Weekly content generation"]
+    types:
+      - completed
 
 jobs:
-  telegram-test:
+  send:
     runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
 
     steps:
-      # ─────────────────────────────────────────
-      # CHECKOUT REPO
-      # ─────────────────────────────────────────
       - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
 
-      # ─────────────────────────────────────────
-      # PYTHON SETUP
-      # ─────────────────────────────────────────
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
-      # ─────────────────────────────────────────
-      # INSTALL DEPENDENCIES
-      # ─────────────────────────────────────────
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-
-      - name: Test HF models
-        run: python scripts/test_hf.py
-        env:
-          HF_API_KEY: ${{ secrets.HF_API_KEY }}
-
-      # ─────────────────────────────────────────
-      # DEBUG FILES
-      # ─────────────────────────────────────────
-      - name: Verify files
-        run: |
-          echo "ROOT:"
-          ls -la
-
-          echo ""
-          echo "SCRIPTS:"
-          ls -la scripts
-
-          echo ""
-          echo "OUTPUTS:"
-          ls -la outputs
-
-      # ─────────────────────────────────────────
-      # TEST TELEGRAM + IMAGE GENERATION
-      # ─────────────────────────────────────────
       - name: Generate images and send to Telegram
         run: python scripts/generate_and_send.py
         env:
-          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           HF_API_KEY: ${{ secrets.HF_API_KEY }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
