@@ -3,10 +3,9 @@ import json
 import time
 import requests
 from pathlib import Path
-from datetime import datetime
 
 # ─────────────────────────────────────────
-# ENV VARIABLES
+# ENV
 # ─────────────────────────────────────────
 
 HF_API_KEY = os.environ["HF_API_KEY"]
@@ -20,14 +19,13 @@ TELEGRAM_API = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}"
 # ─────────────────────────────────────────
 
 OUTPUT_DIR = Path("outputs")
-IMAGE_DIR = OUTPUT_DIR / "images"
-
-IMAGE_DIR.mkdir(parents=True, exist_ok=True)
-
 POSTS_FILE = OUTPUT_DIR / "posts.json"
 
+IMAGE_DIR = OUTPUT_DIR / "images"
+IMAGE_DIR.mkdir(parents=True, exist_ok=True)
+
 # ─────────────────────────────────────────
-# HUGGING FACE
+# HF MODELS
 # ─────────────────────────────────────────
 
 HF_MODELS = [
@@ -43,7 +41,7 @@ HF_HEADERS = {
 }
 
 # ─────────────────────────────────────────
-# TELEGRAM HELPERS
+# TELEGRAM
 # ─────────────────────────────────────────
 
 def tg_send_message(text):
@@ -52,12 +50,14 @@ def tg_send_message(text):
         f"{TELEGRAM_API}/sendMessage",
         json={
             "chat_id": TELEGRAM_CHAT_ID,
-            "text": text[:4096],
-            "parse_mode": "HTML"
+            "text": text[:4096]
         }
     )
 
     print("Telegram message:", response.status_code)
+
+    if response.status_code != 200:
+        print(response.text)
 
     return response.status_code == 200
 
@@ -70,8 +70,7 @@ def tg_send_photo(image_path, caption):
             f"{TELEGRAM_API}/sendPhoto",
             data={
                 "chat_id": TELEGRAM_CHAT_ID,
-                "caption": caption[:1024],
-                "parse_mode": "HTML"
+                "caption": caption[:1024]
             },
             files={
                 "photo": f
@@ -89,15 +88,14 @@ def tg_send_photo(image_path, caption):
 # IMAGE GENERATION
 # ─────────────────────────────────────────
 
-def generate_image_hf(prompt, filename):
+def generate_image(prompt, filename):
 
     save_path = IMAGE_DIR / filename
 
     enhanced_prompt = (
         f"{prompt}, dark background, "
-        f"professional DevOps style, "
-        f"high quality, cinematic lighting, "
-        f"modern cloud infrastructure aesthetic"
+        f"DevOps illustration, cinematic lighting, "
+        f"cloud infrastructure, modern UI"
     )
 
     for model in HF_MODELS:
@@ -115,18 +113,31 @@ def generate_image_hf(prompt, filename):
                 timeout=120
             )
 
-            print("HF Status:", response.status_code)
+            print("HF status:", response.status_code)
 
             if response.status_code == 200:
 
-                save_path.write_bytes(response.content)
+                content_type = response.headers.get(
+                    "content-type",
+                    ""
+                )
 
-                print(f"Saved image: {save_path}")
+                print("Content-Type:", content_type)
 
-                return save_path
+                if "image" in content_type:
+
+                    save_path.write_bytes(response.content)
+
+                    print(f"Saved image: {save_path}")
+
+                    return save_path
+
+                else:
+                    print("HF did not return image")
+                    print(response.text[:500])
 
             else:
-                print(response.text)
+                print(response.text[:500])
 
         except Exception as e:
             print("HF Error:", e)
@@ -139,7 +150,9 @@ def generate_image_hf(prompt, filename):
 # MAIN
 # ─────────────────────────────────────────
 
-def generate():
+def main():
+
+    print("STARTING TELEGRAM TEST")
 
     if not POSTS_FILE.exists():
         raise Exception("outputs/posts.json not found")
@@ -151,8 +164,7 @@ def generate():
     print(f"Loaded {len(posts)} posts")
 
     tg_send_message(
-        f"🚀 Testing Telegram + AI Images\n\n"
-        f"Posts loaded: {len(posts)}"
+        f"🚀 Telegram image workflow started\nPosts: {len(posts)}"
     )
 
     for i, post in enumerate(posts, start=1):
@@ -165,40 +177,39 @@ def generate():
 
         prompt = post.get(
             "image_prompt",
-            f"DevOps cloud infrastructure about {topic}"
+            f"DevOps cloud illustration about {topic}"
         )
 
-        print(f"\nGenerating image for: {topic}")
+        print(f"\nProcessing: {topic}")
 
         filename = f"post_{i}.png"
 
-        img_path = generate_image_hf(prompt, filename)
+        img_path = generate_image(prompt, filename)
 
-        caption = (
-            f"<b>{topic}</b>\n\n"
-            f"{hashtags}"
-        )
+        caption = f"{topic}\n\n{hashtags}"
 
         if img_path and img_path.exists():
 
-            print("Sending image to Telegram...")
+            print("Sending image...")
 
             tg_send_photo(img_path, caption)
 
         else:
 
             tg_send_message(
-                f"⚠️ Failed image generation for:\n{topic}"
+                f"⚠️ Image generation failed:\n{topic}"
             )
 
         time.sleep(2)
 
-        tg_send_message(body)
+        tg_send_message(body[:3500])
 
         time.sleep(2)
 
-    tg_send_message("✅ Telegram image test completed")
+    tg_send_message("✅ Workflow completed")
+
+    print("DONE")
 
 
 if __name__ == "__main__":
-    generate()
+    main()
