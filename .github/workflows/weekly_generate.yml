@@ -13,31 +13,68 @@ jobs:
       contents: write
 
     steps:
+      # ─────────────────────────────────────────
+      # CHECKOUT
+      # ─────────────────────────────────────────
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
+      # ─────────────────────────────────────────
+      # DEBUG (IMPORTANT)
+      # ─────────────────────────────────────────
+      - name: Debug repository structure
+        run: |
+          echo "CURRENT DIRECTORY:"
+          pwd
+
+          echo ""
+          echo "ROOT FILES:"
+          ls -la
+
+          echo ""
+          echo "SCRIPTS FOLDER:"
+          ls -la scripts
+
+      # ─────────────────────────────────────────
+      # PYTHON
+      # ─────────────────────────────────────────
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
+      # ─────────────────────────────────────────
+      # INSTALL DEPENDENCIES
+      # ─────────────────────────────────────────
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      # ─────────────────────────────────────────
+      # FETCH TRENDS
+      # ─────────────────────────────────────────
       - name: Fetch trends
         run: python scripts/fetch_trends.py
 
+      # ─────────────────────────────────────────
+      # GENERATE POSTS
+      # ─────────────────────────────────────────
       - name: Generate 7 posts
         run: python scripts/generate_posts.py
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
 
+      # ─────────────────────────────────────────
+      # SAVE TO GOOGLE SHEETS
+      # ─────────────────────────────────────────
       - name: Save to Google Sheets
         run: python scripts/save_to_sheets.py
         env:
           GOOGLE_SHEETS_ID: ${{ secrets.GOOGLE_SHEETS_ID }}
           GOOGLE_CREDENTIALS_JSON: ${{ secrets.GOOGLE_CREDENTIALS_JSON }}
 
+      # ─────────────────────────────────────────
+      # GENERATE IMAGES + TELEGRAM
+      # ─────────────────────────────────────────
       - name: Generate images + send to Telegram
         run: python scripts/generate_and_send.py
         env:
@@ -45,6 +82,9 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
 
+      # ─────────────────────────────────────────
+      # COMMIT OUTPUTS
+      # ─────────────────────────────────────────
       - name: Commit outputs
         run: |
           git config --global user.name "github-actions[bot]"
@@ -58,9 +98,7 @@ jobs:
             git commit -m "Weekly content $(date +%Y-%m-%d)"
           fi
 
-          # Sync with remote branch
           git fetch origin main
           git rebase origin/main || true
 
-          # Push latest changes
           git push origin HEAD:main
