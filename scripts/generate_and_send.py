@@ -3,16 +3,16 @@ import json
 import time
 import requests
 from pathlib import Path
+from datetime import datetime
 
 # ─────────────────────────────────────────
 # ENV VARIABLES
 # ─────────────────────────────────────────
 
-HF_API_KEY = os.environ["HF_API_KEY"]
+HF_API_KEY         = os.environ["HF_API_KEY"]
 TELEGRAM_BOT_TOKEN = os.environ["TELEGRAM_BOT_TOKEN"]
-TELEGRAM_CHAT_ID = os.environ["TELEGRAM_CHAT_ID"]
-
-TELEGRAM_API = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}"
+TELEGRAM_CHAT_ID   = os.environ["TELEGRAM_CHAT_ID"]
+TELEGRAM_API       = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}"
 
 # ─────────────────────────────────────────
 # PATHS
@@ -20,16 +20,18 @@ TELEGRAM_API = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}"
 
 OUTPUT_DIR = Path("outputs")
 POSTS_FILE = OUTPUT_DIR / "posts.json"
-
-IMAGE_DIR = OUTPUT_DIR / "images"
+IMAGE_DIR  = OUTPUT_DIR / "images"
 IMAGE_DIR.mkdir(parents=True, exist_ok=True)
 
 # ─────────────────────────────────────────
-# HUGGING FACE MODELS
+# HF MODELS — ordered best to fallback
+# All confirmed working on free HF Inference API
 # ─────────────────────────────────────────
 
 HF_MODELS = [
-    "runwayml/stable-diffusion-v1-5"
+    "black-forest-labs/FLUX.1-schnell",
+    "stabilityai/stable-diffusion-xl-base-1.0",
+    "stabilityai/stable-diffusion-2-1",
 ]
 
 HF_HEADERS = {
@@ -43,127 +45,147 @@ HF_HEADERS = {
 # ─────────────────────────────────────────
 
 def tg_send_message(text):
-
-    response = requests.post(
-        f"{TELEGRAM_API}/sendMessage",
-        json={
-            "chat_id": TELEGRAM_CHAT_ID,
-            "text": text[:4096]
-        },
-        timeout=30
-    )
-
-    print("Telegram message:", response.status_code)
-
-    if response.status_code != 200:
-        print(response.text)
-
-    return response.status_code == 200
+    try:
+        r = requests.post(
+            f"{TELEGRAM_API}/sendMessage",
+            json={
+                "chat_id": TELEGRAM_CHAT_ID,
+                "text": text[:4096],
+                "parse_mode": "HTML",
+                "disable_web_page_preview": True
+            },
+            timeout=15
+        )
+        print(f"  TG message: {r.status_code}")
+        if r.status_code != 200:
+            print(f"  TG error: {r.text[:200]}")
+        return r.status_code == 200
+    except Exception as e:
+        print(f"  TG message exception: {e}")
+        return False
 
 
 def tg_send_photo(image_path, caption):
-
-    with open(image_path, "rb") as f:
-
-        response = requests.post(
-            f"{TELEGRAM_API}/sendPhoto",
-            data={
-                "chat_id": TELEGRAM_CHAT_ID,
-                "caption": caption[:1024]
-            },
-            files={
-                "photo": f
-            },
-            timeout=120
-        )
-
-    print("Telegram photo:", response.status_code)
-
-    if response.status_code != 200:
-        print(response.text)
-
-    return response.status_code == 200
+    try:
+        with open(image_path, "rb") as f:
+            r = requests.post(
+                f"{TELEGRAM_API}/sendPhoto",
+                data={
+                    "chat_id": TELEGRAM_CHAT_ID,
+                    "caption": caption[:1024],
+                    "parse_mode": "HTML"
+                },
+                files={"photo": ("image.png", f, "image/png")},
+                timeout=60
+            )
+        print(f"  TG photo: {r.status_code}")
+        if r.status_code != 200:
+            print(f"  TG photo error: {r.text[:200]}")
+        return r.status_code == 200
+    except Exception as e:
+        print(f"  TG photo exception: {e}")
+        return False
 
 # ─────────────────────────────────────────
 # IMAGE GENERATION
 # ─────────────────────────────────────────
 
 def generate_image(prompt, filename):
-
     save_path = IMAGE_DIR / filename
 
-    enhanced_prompt = (
+    enhanced = (
         f"{prompt}, "
-        f"dark background, "
-        f"professional DevOps illustration, "
-        f"cloud infrastructure, "
-        f"cinematic lighting, "
-        f"high quality, "
-        f"modern UI dashboard, "
-        f"cyberpunk style"
+        "dark background, professional tech illustration, "
+        "DevOps cloud infrastructure, clean modern UI, "
+        "high resolution, cinematic lighting, no text, no watermark"
     )
 
     for model in HF_MODELS:
-
-        print(f"\nTrying model: {model}")
+        short = model.split("/")[-1]
+        print(f"  Trying: {short}")
 
         try:
-
-            response = requests.post(
+            r = requests.post(
                 f"https://api-inference.huggingface.co/models/{model}",
                 headers=HF_HEADERS,
                 json={
-                    "inputs": enhanced_prompt,
-                    "options": {
-                        "wait_for_model": True
-                    }
+                    "inputs": enhanced,
+                    "parameters": {
+                        "num_inference_steps": 20,
+                        "guidance_scale": 7.5
+                    },
+                    "options": {"wait_for_model": True}
                 },
-                timeout=300
+                timeout=120
             )
 
-            print("HF status:", response.status_code)
+            print(f"  HF status: {r.status_code}")
+            print(f"  Content-Type: {r.headers.get('content-type', 'unknown')}")
 
-            if response.status_code == 200:
+            # ── Success: got image bytes ──
+            if r.status_code == 200 and "image" in r.headers.get("content-type", ""):
+                save_path.write_bytes(r.content)
+                print(f"  ✓ Saved {filename} ({len(r.content)//1024} KB)")
+                return save_path
 
-                content_type = response.headers.get(
-                    "content-type",
-                    ""
-                )
-
-                print("Content-Type:", content_type)
-
-                if "image" in content_type:
-
-                    save_path.write_bytes(response.content)
-
-                    print(f"Saved image: {save_path}")
-
-                    return save_path
-
-                else:
-
-                    print("HF returned non-image response")
-
-                    try:
-                        print(response.json())
-                    except:
-                        print(response.text[:500])
-
-            else:
-
-                print("HF error response:")
-
+            # ── Got JSON back instead of image ──
+            if r.status_code == 200:
                 try:
-                    print(response.json())
-                except:
-                    print(response.text[:500])
+                    body = r.json()
+                    print(f"  HF returned JSON (not image): {body}")
+                except Exception:
+                    print(f"  HF returned non-image, non-JSON: {r.text[:200]}")
+                time.sleep(5)
+                continue
 
+            # ── Model still loading ──
+            if r.status_code == 503:
+                try:
+                    wait = r.json().get("estimated_time", 20)
+                except Exception:
+                    wait = 20
+                print(f"  Model loading — waiting {wait}s")
+                time.sleep(min(wait, 30))
+                # Retry same model once
+                print(f"  Retrying {short} after wait...")
+                r2 = requests.post(
+                    f"https://api-inference.huggingface.co/models/{model}",
+                    headers=HF_HEADERS,
+                    json={
+                        "inputs": enhanced,
+                        "parameters": {"num_inference_steps": 20},
+                        "options": {"wait_for_model": True}
+                    },
+                    timeout=120
+                )
+                if r2.status_code == 200 and "image" in r2.headers.get("content-type", ""):
+                    save_path.write_bytes(r2.content)
+                    print(f"  ✓ Saved on retry: {filename}")
+                    return save_path
+                print(f"  Retry failed ({r2.status_code}) — trying next model")
+                continue
+
+            # ── Rate limited ──
+            if r.status_code == 429:
+                print("  Rate limited — waiting 20s")
+                time.sleep(20)
+                continue
+
+            # ── Model gated / not found ──
+            if r.status_code in (401, 403, 404):
+                print(f"  Model unavailable ({r.status_code}) — skipping")
+                continue
+
+            print(f"  Unexpected status {r.status_code} — trying next model")
+
+        except requests.exceptions.Timeout:
+            print(f"  Timeout on {short} — trying next model")
         except Exception as e:
+            print(f"  Exception on {short}: {e}")
 
-            print("HF Error:", e)
+        time.sleep(3)
 
-        time.sleep(5)
-
+    print(f"  ✗ All models failed for {filename}")
     return None
 
 # ─────────────────────────────────────────
@@ -171,76 +193,89 @@ def generate_image(prompt, filename):
 # ─────────────────────────────────────────
 
 def main():
-
-    print("STARTING TELEGRAM + IMAGE WORKFLOW")
+    print(f"\n{'='*50}")
+    print("LinkedIn content bot — image gen + Telegram")
+    print(f"{'='*50}\n")
 
     if not POSTS_FILE.exists():
-        raise Exception("outputs/posts.json not found")
+        tg_send_message("❌ posts.json not found. Check GitHub Actions logs.")
+        raise FileNotFoundError("outputs/posts.json not found")
 
-    data = json.loads(POSTS_FILE.read_text())
-
+    data  = json.loads(POSTS_FILE.read_text())
     posts = data.get("posts", [])
+    week  = data.get("week_start", datetime.utcnow().strftime("%d %b %Y"))
 
-    print(f"Loaded {len(posts)} posts")
+    print(f"Loaded {len(posts)} posts for week of {week}")
 
     tg_send_message(
-        f"🚀 Telegram image workflow started\n\n"
-        f"Posts loaded: {len(posts)}"
+        f"🚀 <b>LinkedIn Content — Week of {week}</b>\n\n"
+        f"📝 {len(posts)} posts generated\n"
+        f"🎨 Generating images via Hugging Face\n\n"
+        f"Posts incoming 👇"
     )
+    time.sleep(1)
 
-    for i, post in enumerate(posts, start=1):
+    failed = []
 
-        topic = post.get("topic", "DevOps")
-
-        body = post.get("body", "")
-
+    for i, post in enumerate(posts, 1):
+        topic    = post.get("topic", "DevOps")
+        body     = post.get("body", "")
         hashtags = post.get("hashtags", "#DevOps")
+        hook     = post.get("hook", "")
+        day      = post.get("day", f"Day {i}")
+        prompt   = post.get("image_prompt", f"DevOps cloud infrastructure illustration, {topic}")
+        words    = post.get("word_count", 0)
 
-        prompt = post.get(
-            "image_prompt",
-            f"DevOps cloud illustration about {topic}"
-        )
+        print(f"\n[{i}/7] {day} — {topic}")
 
-        print(f"\nProcessing post {i}: {topic}")
+        # ── Generate image ──
+        safe  = topic.lower().replace(" ", "_").replace("/", "_")[:25]
+        fname = f"day{i}_{safe}.png"
+        img   = generate_image(prompt, fname)
 
-        filename = f"post_{i}.png"
+        if not img:
+            failed.append(f"Day {i} — {topic}")
 
-        img_path = generate_image(prompt, filename)
-
+        # ── Caption under image ──
         caption = (
-            f"{topic}\n\n"
-            f"{hashtags}"
+            f"<b>Day {i} — {day}</b>\n"
+            f"<b>{topic}</b>\n\n"
+            f"{hook}\n\n"
+            f"{hashtags}\n"
+            f"📝 {words} words"
         )
 
-        if img_path and img_path.exists():
-
-            print("Sending image to Telegram...")
-
-            tg_send_photo(img_path, caption)
-
+        # ── Send image + caption ──
+        if img and img.exists():
+            if not tg_send_photo(img, caption):
+                tg_send_message(f"⚠️ Photo upload failed\n\n{caption}")
         else:
+            tg_send_message(f"⚠️ <b>Image failed — Day {i}</b>\n\n{caption}")
 
-            print("Image generation failed")
+        time.sleep(1)
 
-            tg_send_message(
-                f"⚠️ Failed image generation:\n{topic}"
-            )
-
-        time.sleep(2)
-
-        print("Sending post text...")
-
-        tg_send_message(body[:3500])
+        # ── Full post text — copy-paste ready ──
+        tg_send_message(
+            f"📋 <b>Day {i} — Copy to LinkedIn:</b>\n\n{body}"
+        )
 
         time.sleep(2)
 
-    tg_send_message("✅ Workflow completed successfully")
+    # ── Footer ──
+    lines = [f"✅ <b>All {len(posts)} posts sent!</b>\n"]
+    lines += [
+        "Your checklist:",
+        "1️⃣ Read posts above — edit if needed",
+        "2️⃣ Save images from this chat",
+        "3️⃣ Schedule all 7 on LinkedIn\n"
+    ]
+    if failed:
+        lines.append("⚠️ <b>These images failed — generate on ideogram.ai:</b>")
+        lines += [f"  • {f}" for f in failed]
 
-    print("DONE")
+    tg_send_message("\n".join(lines))
+    print("\n✅ Done — check Telegram.")
 
-# ─────────────────────────────────────────
-# ENTRYPOINT
-# ─────────────────────────────────────────
 
 if __name__ == "__main__":
     main()
