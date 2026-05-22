@@ -258,61 +258,142 @@ def generate():
     for i, t in enumerate(chosen_topics, 1):
         print(f"  Day {i}: {t}")
 
-    response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
-        messages=[{"role": "user", "content": PROMPT}],
-        temperature=0.75,
-        max_tokens=8000,
-    )
-
-    raw = response.choices[0].message.content
-
-    print("\n=== RAW RESPONSE (first 500 chars) ===")
-    print(raw[:500])
-    print("======================================\n")
-
     Path("outputs").mkdir(exist_ok=True)
 
-    try:
-        data = json.loads(clean_json(raw))
+    all_posts = []
 
-    except json.JSONDecodeError as e:
-        print(f"JSON parse failed on first attempt: {e}")
-        Path("outputs/debug_raw.txt").write_text(raw)
-        print("Saved raw to outputs/debug_raw.txt — retrying with cleanup prompt")
+    # Split into two batches: days 1-4 and days 5-7
+    batches = [
+        (list(range(0, 4)), "Batch 1 — Days 1 to 4"),
+        (list(range(4, 7)), "Batch 2 — Days 5 to 7"),
+    ]
 
-        retry_prompt = (
-            "Fix the following broken JSON and return only valid JSON. "
-            "Rules: every newline inside a string value must be the two characters backslash + n. "
-            "No real line breaks inside string values. No control characters. No markdown. "
-            "Return only the JSON object, nothing else.\n\n"
-            f"{raw[:6000]}"
-        )
-        retry_response = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
-            messages=[{"role": "user", "content": retry_prompt}],
-            temperature=0.1,
-            max_tokens=8000,
-        )
-        raw2 = retry_response.choices[0].message.content
-        print("Retry raw (first 300 chars):")
-        print(raw2[:300])
-        data = json.loads(clean_json(raw2))
-        print("Retry succeeded.")
+    for batch_indices, batch_label in batches:
+        print(f"\n--- {batch_label} ---")
 
-    for post in data.get("posts", []):
-        post["word_count"]   = len(post.get("body", "").split())
-        post["status"]       = "Draft"
-        post["generated_at"] = datetime.now(UTC).isoformat()
+        batch_topics = [chosen_topics[i] for i in batch_indices]
+        batch_days   = [week_days[i]     for i in batch_indices]
+        batch_formats= [POST_FORMATS[i]  for i in batch_indices]
+
+        batch_prompt = f"""
+You are a senior DevOps engineer writing LinkedIn posts from real hands-on experience.
+You write for technical professionals: DevOps engineers, SREs, platform engineers, hiring managers.
+
+YOUR BACKGROUND:
+{YOUR_PERSONA}
+
+═══════════════════════════════════════════
+POST REQUIREMENTS — follow every rule strictly
+═══════════════════════════════════════════
+
+LENGTH: Every post body must be 180 to 280 words. Count carefully. No exceptions.
+
+STRUCTURE — every post must follow this exact layout:
+
+[HOOK] One punchy specific sentence on its own line.
+[blank line]
+[CONTEXT] 1-2 sentences: why this matters or what triggered this.
+[blank line]
+[BODY] Technical content in the assigned format. Real tool names. Real commands. Real numbers. No vague phrases.
+[blank line]
+[CLOSING QUESTION] One specific question a practitioner would genuinely answer.
+[blank line]
+[HASHTAGS] 3 to 5 hashtags. Always include #DevOps.
+
+WRITING RULES:
+- First person: I, we, our team
+- Short sentences. One idea per sentence.
+- Banned: game-changer, leverage, delve, unlock, journey, synergy, excited to share, thrilled
+- Use \\n between paragraphs — never a real line break inside a JSON string
+
+IMAGE PROMPT RULES — each image_prompt must be a TECHNICAL VISUAL:
+- Visual type: terminal, architecture diagram, dashboard, code diff, infographic
+- Dark background #0d1117
+- Accent color: green #00ff88 or cyan #00d4ff
+- Specific technical elements (exact commands, service names, diagram parts)
+- Style: clean, minimal, no people, no watermark
+
+═══════════════════════════════════════════
+POSTS TO GENERATE FOR THIS BATCH
+═══════════════════════════════════════════
+{chr(10).join(f"Post {i+1} ({batch_days[i]}): TOPIC=[{batch_topics[i]}] FORMAT=[{batch_formats[i]}]" for i in range(len(batch_indices)))}
+
+═══════════════════════════════════════════
+OUTPUT FORMAT
+═══════════════════════════════════════════
+Return ONLY a raw JSON object. No markdown. No backticks. No explanation before or after.
+CRITICAL: All newlines inside string values MUST be written as \\n — never use real line breaks inside JSON strings.
+
+{{
+  "posts": [
+    {{
+      "day": "{batch_days[0]}",
+      "topic": "exact topic",
+      "hook": "first line only, no newlines",
+      "body": "complete post using \\n for paragraph breaks",
+      "hashtags": "#Tag1 #Tag2 #DevOps",
+      "image_prompt": "technical visual description — no people, no stock photos",
+      "word_count": 0
+    }}
+  ]
+}}
+"""
+
+        for attempt in range(3):
+            try:
+                response = client.chat.completions.create(
+                    model="llama-3.3-70b-versatile",
+                    messages=[{"role": "user", "content": batch_prompt}],
+                    temperature=0.75,
+                    max_tokens=8000,
+                )
+
+                raw = response.choices[0].message.content
+                print(f"  Raw length: {len(raw)} chars")
+
+                data = json.loads(clean_json(raw))
+                posts = data.get("posts", [])
+
+                if len(posts) < len(batch_indices):
+                    print(f"  Got {len(posts)} posts, expected {len(batch_indices)} — retrying")
+                    continue
+
+                # Stamp each post with correct day from our schedule
+                for j, post in enumerate(posts[:len(batch_indices)]):
+                    post["day"]          = batch_days[j]
+                    post["topic"]        = post.get("topic", batch_topics[j])
+                    post["word_count"]   = len(post.get("body", "").split())
+                    post["status"]       = "Draft"
+                    post["generated_at"] = datetime.now(UTC).isoformat()
+
+                all_posts.extend(posts[:len(batch_indices)])
+                print(f"  Got {len(posts[:len(batch_indices)])} posts OK")
+                break
+
+            except json.JSONDecodeError as e:
+                print(f"  JSON parse failed attempt {attempt+1}: {e}")
+                if attempt == 2:
+                    raise
+                continue
+
+            except Exception as e:
+                print(f"  Error attempt {attempt+1}: {e}")
+                if attempt == 2:
+                    raise
+                continue
+
+    if len(all_posts) != 7:
+        print(f"WARNING: Expected 7 posts, got {len(all_posts)}")
+
+    output = {
+        "week_start": week_days[0],
+        "posts": all_posts
+    }
 
     Path("outputs/posts.json").write_text(
-        json.dumps(data, indent=2, ensure_ascii=False)
+        json.dumps(output, indent=2, ensure_ascii=False)
     )
 
-    print(f"\nGenerated {len(data['posts'])} posts:\n")
-    for p in data["posts"]:
+    print(f"\nGenerated {len(all_posts)} posts:\n")
+    for p in all_posts:
         print(f"  {p['day']} | {p['topic']} | {p['word_count']} words")
-
-
-if __name__ == "__main__":
-    generate()
