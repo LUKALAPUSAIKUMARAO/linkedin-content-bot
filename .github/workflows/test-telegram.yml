@@ -1,16 +1,13 @@
 name: 2 — Generate images and send to Telegram
 
 on:
+  schedule:
+    - cron: '15 7 * * 6'
   workflow_dispatch:
-  workflow_run:
-    workflows: ["1 — Weekly content generation"]
-    types:
-      - completed
 
 jobs:
   send:
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
 
     steps:
       - uses: actions/checkout@v4
