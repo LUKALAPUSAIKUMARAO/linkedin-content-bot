@@ -15,6 +15,18 @@ jobs:
           ref: main
           fetch-depth: 0
 
+      - name: Pull latest commits
+        run: git pull origin main
+
+      - name: Check posts.json exists
+        run: |
+          if [ ! -f outputs/posts.json ]; then
+            echo "ERROR: outputs/posts.json not found."
+            echo "Run Workflow 1 first, then re-run this workflow."
+            exit 1
+          fi
+          echo "posts.json found. Post count: $(python3 -c "import json; d=json.load(open('outputs/posts.json')); print(len(d.get('posts',[])))")"
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
