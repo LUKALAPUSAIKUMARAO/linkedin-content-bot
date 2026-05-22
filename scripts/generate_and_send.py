@@ -3,7 +3,7 @@ import json
 import time
 import requests
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timezone
 
 # ─────────────────────────────────────────
 # ENV VARIABLES
@@ -14,6 +14,13 @@ TELEGRAM_BOT_TOKEN = os.environ["TELEGRAM_BOT_TOKEN"]
 TELEGRAM_CHAT_ID   = os.environ["TELEGRAM_CHAT_ID"]
 TELEGRAM_API       = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}"
 
+HF_URL = "https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell"
+
+HF_HEADERS = {
+    "Authorization": f"Bearer {HF_API_KEY}",
+    "Content-Type": "application/json",
+}
+
 # ─────────────────────────────────────────
 # PATHS
 # ─────────────────────────────────────────
@@ -22,17 +29,6 @@ OUTPUT_DIR = Path("outputs")
 POSTS_FILE = OUTPUT_DIR / "posts.json"
 IMAGE_DIR  = OUTPUT_DIR / "images"
 IMAGE_DIR.mkdir(parents=True, exist_ok=True)
-
-# ─────────────────────────────────────────
-# HF — correct URL confirmed working
-# ─────────────────────────────────────────
-
-HF_URL = "https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell"
-
-HF_HEADERS = {
-    "Authorization": f"Bearer {HF_API_KEY}",
-    "Content-Type": "application/json",
-}
 
 # ─────────────────────────────────────────
 # TELEGRAM
@@ -91,7 +87,7 @@ def generate_image(prompt, filename):
         f"{prompt}, "
         "dark background, professional tech illustration, "
         "DevOps cloud infrastructure, clean modern UI, "
-        "high resolution, no text, no watermark"
+        "high resolution, no text overlay, no watermark"
     )
 
     print(f"  Generating: {filename}")
@@ -155,19 +151,22 @@ def main():
     print(f"{'='*50}\n")
 
     if not POSTS_FILE.exists():
-        tg_send_message("❌ posts.json not found.")
+        tg_send_message("❌ posts.json not found. Run Workflow 1 first.")
         raise FileNotFoundError("outputs/posts.json not found")
 
     data  = json.loads(POSTS_FILE.read_text())
     posts = data.get("posts", [])
-    from datetime import timezone
     week  = data.get("week_start", datetime.now(timezone.utc).strftime("%d %b %Y"))
 
     print(f"Loaded {len(posts)} posts — week of {week}")
 
+    if len(posts) == 0:
+        tg_send_message("❌ posts.json exists but has 0 posts. Re-run Workflow 1.")
+        raise ValueError("No posts found in posts.json")
+
     tg_send_message(
         f"🚀 <b>LinkedIn Content — Week of {week}</b>\n\n"
-        f"📝 {len(posts)} posts generated\n"
+        f"📝 {len(posts)} posts loaded\n"
         f"🎨 Generating images via FLUX.1-schnell\n\n"
         f"Posts incoming 👇"
     )
@@ -184,7 +183,7 @@ def main():
         prompt   = post.get("image_prompt", f"DevOps cloud infrastructure, {topic}")
         words    = post.get("word_count", 0)
 
-        print(f"\n[{i}/7] {day} — {topic}")
+        print(f"\n[{i}/{len(posts)}] {day} — {topic}")
 
         safe  = topic.lower().replace(" ", "_").replace("/", "_")[:25]
         fname = f"day{i}_{safe}.png"
@@ -209,7 +208,9 @@ def main():
 
         time.sleep(1)
 
-        tg_send_message(f"📋 <b>Day {i} — Copy to LinkedIn:</b>\n\n{body}")
+        tg_send_message(
+            f"📋 <b>Day {i} — Copy to LinkedIn:</b>\n\n{body}"
+        )
 
         time.sleep(2)
 
