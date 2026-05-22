@@ -1,4 +1,82 @@
 {
-  "week_start": "",
-  "posts": []
+  "week_start": "Monday 25 May",
+  "posts": [
+    {
+      "day": "Monday 25 May",
+      "topic": "How Kubernetes pod scheduling actually works under the hood",
+      "hook": "I've spent countless hours debugging Kubernetes pod scheduling issues at 2am",
+      "body": "I work with Kubernetes daily, and understanding pod scheduling is crucial for our deployments. \n \n      Here are 7 specific insights into how Kubernetes pod scheduling works: \n\n      1. The Kubernetes scheduler uses a cache to store pod information, which reduces the time it takes to schedule pods. \n\n      2. The scheduler uses a priority queue to order pods based on their priority and scheduling requirements. \n\n      3. The `kube-scheduler` command is used to configure the scheduler, and it can be run with the `--config` flag to specify a custom configuration file. \n\n      4. The scheduler uses a set of predicates to filter out nodes that cannot run a pod, such as nodes with insufficient resources. \n\n      5. The `Descheduler` component can be used to remove pods from nodes, which can help with node maintenance and upgrading. \n\n      6. The scheduler can be configured to use a variety of scheduling algorithms, including the `LeastRequestedPriority` algorithm. \n\n      7. The `kubectl describe` command can be used to view detailed information about a pod's scheduling history. \n \n      What are some common issues you've encountered with Kubernetes pod scheduling?",
+      "hashtags": "#Kubernetes #DevOps #Scheduling",
+      "image_prompt": "A diagram showing the Kubernetes scheduler architecture, with a dark background and green accents, in a minimal and professional style",
+      "word_count": 175,
+      "status": "Draft",
+      "generated_at": "2026-05-22T10:11:08.077994+00:00"
+    },
+    {
+      "day": "Tuesday 26 May",
+      "topic": "Kubernetes resource requests vs limits — most teams get this wrong",
+      "hook": "I've seen many teams struggle with Kubernetes resource requests and limits",
+      "body": "When it comes to Kubernetes resource requests and limits, there are several non-obvious truths that practitioners often learn the hard way. \n \n      What nobody tells you is that: \n\n      1. Setting resource requests too low can lead to pod evictions, even if the node has sufficient resources. \n\n      2. Setting resource limits too high can lead to wasted resources and increased costs. \n\n      3. The `requests` and `limits` fields in a pod's configuration file are not just suggestions, but are actually used by the scheduler to make decisions. \n\n      4. The `kubelet` component will restart a pod if it exceeds its resource limits, which can lead to downtime and data loss. \n \n      How do you handle resource requests and limits in your Kubernetes clusters?",
+      "hashtags": "#Kubernetes #DevOps #ResourceManagement",
+      "image_prompt": "A graph showing the relationship between resource requests and limits, with a dark background and cyan accents, in a clean and minimal style",
+      "word_count": 118,
+      "status": "Draft",
+      "generated_at": "2026-05-22T10:11:08.078033+00:00"
+    },
+    {
+      "day": "Wednesday 27 May",
+      "topic": "Debugging CrashLoopBackOff: my exact step-by-step process",
+      "hook": "I've debugged my fair share of CrashLoopBackOff issues in Kubernetes",
+      "body": "Before, I used to spend hours debugging CrashLoopBackOff issues, but now I follow a step-by-step process. \n \n      The old way looked like this: manually checking logs and configuration files, trying to reproduce the issue. \n \n      But now, I use the following process: \n\n      1. Check the pod's logs using `kubectl logs`. \n\n      2. Verify the pod's configuration file using `kubectl get`. \n\n      3. Check the node's resources and events using `kubectl describe`. \n \n      After implementing this process, I've reduced debugging time by 50%. \n \n      What tools do you use to debug CrashLoopBackOff issues in your Kubernetes clusters?",
+      "hashtags": "#Kubernetes #DevOps #Debugging",
+      "image_prompt": "A screenshot of the Kubernetes dashboard showing a pod in a CrashLoopBackOff state, with a dark background and green accents, in a professional and technical style",
+      "word_count": 90,
+      "status": "Draft",
+      "generated_at": "2026-05-22T10:11:08.078042+00:00"
+    },
+    {
+      "day": "Thursday 28 May",
+      "topic": "Why I switched from Ingress to Gateway API in Kubernetes",
+      "hook": "I recently switched from Ingress to Gateway API in our Kubernetes cluster",
+      "body": "There are several misconceptions about Gateway API that I'd like to bust. \n \n      Myth: Gateway API is only for large-scale clusters. \n \n      Reality: Gateway API can be used in clusters of all sizes, and provides a more flexible and scalable way to manage ingress traffic. \n \n      Myth: Gateway API is more complex than Ingress. \n \n      Reality: While Gateway API has a steeper learning curve, it provides more features and customization options. \n \n      Myth: Gateway API is not compatible with existing Ingress resources. \n \n      Reality: Gateway API is designed to be backwards compatible with existing Ingress resources, making it easy to migrate. \n \n      What are your thoughts on using Gateway API in Kubernetes?",
+      "hashtags": "#Kubernetes #DevOps #GatewayAPI",
+      "image_prompt": "A diagram showing the architecture of Gateway API, with a dark background and cyan accents, in a clean and technical style",
+      "word_count": 105,
+      "status": "Draft",
+      "generated_at": "2026-05-22T10:11:08.078050+00:00"
+    },
+    {
+      "day": "Friday 29 May",
+      "topic": "Kubernetes RBAC done right — least privilege in practice",
+      "hook": "I've seen too many clusters with over-privileged service accounts, just waiting to be exploited",
+      "body": "We use Kubernetes RBAC to manage access to our cluster.\n\nTo implement least privilege in practice, our team uses tools like kubectl to create and manage roles, rbac-manager to simplify role management, kustomize to template our RBAC configurations, opa-gatekeeper to enforce policy as code, and Terraform to manage our AWS IAM roles.\n\nFor example, with kubectl, we can create a role with specific permissions using the command: kubectl create role my-role --verb=get --resource=pods.\n\nWith rbac-manager, we can simplify role management by defining roles in a centralized configuration file.\n\nUsing kustomize, we template our RBAC configurations to ensure consistency across environments.\n\nopa-gatekeeper enforces our policies as code, preventing overly permissive roles from being created.\n\nFinally, Terraform manages our AWS IAM roles, ensuring that our Kubernetes service accounts have the necessary permissions to access AWS resources.\n\nWhat's your approach to implementing least privilege in your Kubernetes cluster?",
+      "hashtags": "#Kubernetes #RBAC #DevOps",
+      "image_prompt": "A dark background #0d1117 diagram showing a Kubernetes cluster with green #00ff88 accents, highlighting the flow of RBAC permissions and policies, in a minimalist style",
+      "word_count": 145,
+      "status": "Draft",
+      "generated_at": "2026-05-22T10:11:41.859243+00:00"
+    },
+    {
+      "day": "Saturday 30 May",
+      "topic": "HPA vs KEDA — when autoscaling gets serious",
+      "hook": "At 2am, our team received a pager alert that our application was down due to insufficient capacity",
+      "body": "The incident occurred when our Horizontal Pod Autoscaler (HPA) failed to scale our pods in time to meet increasing demand.\n\nWe use HPA to scale our pods based on CPU utilization, but in this case, it was not enough.\n\nTo debug the issue, we checked the HPA configuration and found that the scale-up and scale-down policies were not aggressive enough.\n\nWe then decided to switch to Kubernetes Event-Driven Autoscaling (KEDA) to scale our pods based on queue length, which better suited our workload.\n\nWith KEDA, we defined a scale-up policy based on the number of messages in our queue, and a scale-down policy based on the average queue length over a period of time.\n\nUsing the command kubectl apply -f keda-config.yaml, we applied the new KEDA configuration to our cluster.\n\nAfter switching to KEDA, our application was able to scale more efficiently and we avoided similar outages.\n\nWhat autoscaling strategy do you use in your Kubernetes cluster and why?",
+      "hashtags": "#Kubernetes #Autoscaling #DevOps",
+      "image_prompt": "A dark background #0d1117 graph showing the difference in scaling between HPA and KEDA, with cyan #00d4ff accents highlighting the KEDA scaling events, in a clean and professional style",
+      "word_count": 159,
+      "status": "Draft",
+      "generated_at": "2026-05-22T10:11:41.859268+00:00"
+    },
+    {
+      "day": "Sunday 31 May",
+      "topic": "Terraform state file — the thing that will bite you if ignored",
+      "hook": "I've lost count of the number of times our team has struggled with Terraform state file issues",
+      "body": "One piece of advice I can offer is to always store your Terraform state file in a secure and version-controlled location, such as an S3 bucket with bucket versioning enabled.\n\nWe use the command terraform remote config -backend=s3 -backend-config='bucket=my-bucket' -backend-config='key=my-state-file.tfstate' to configure our Terraform backend.\n\nBy storing our state file in S3, we can ensure that our state file is secure, version-controlled, and accessible from anywhere.\n\nAdditionally, we use the Terraform state locking mechanism to prevent concurrent modifications to our state file.\n\nUsing the command terraform state lock, we can lock our state file and prevent other team members from making changes while we are working on our infrastructure.\n\nBy following these best practices, you can avoid common issues with your Terraform state file and ensure that your infrastructure deployments are smooth and reliable.\n\nWhat strategy do you use to manage your Terraform state file and prevent issues?",
+      "hashtags": "#Terraform #InfrastructureAsCode #DevOps",
+      "image_prompt": "A dark background #0d1117 diagram showing a Terraform state file stored in an S3 bucket, with green #00ff88 accents highlighting the bucket versioning and locking mechanisms, in a minimalist style",
+      "word_count": 148,
+      "status": "Draft",
+      "generated_at": "2026-05-22T10:11:41.859279+00:00"
+    }
+  ]
 }
