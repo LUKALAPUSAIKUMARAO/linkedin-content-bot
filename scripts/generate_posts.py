@@ -224,29 +224,49 @@ def clean_json(raw: str) -> str:
     raw = raw.strip()
     raw = raw.replace("```json", "").replace("```", "").strip()
 
-    match = re.search(r"\{.*\}", raw, re.DOTALL)
-    if not match:
+    # Find outermost JSON object
+    start = raw.find("{")
+    end   = raw.rfind("}") + 1
+    if start == -1 or end == 0:
         raise ValueError("No JSON object found in response")
-    cleaned = match.group(0)
+    raw = raw[start:end]
 
-    # Fix literal newlines inside JSON string values
-    def fix_newlines_in_strings(m):
-        inner = m.group(0)
-        # Replace real newlines inside the string with escaped \n
-        inner = inner.replace("\r\n", "\\n").replace("\r", "\\n").replace("\n", "\\n")
-        return inner
+    # State machine: fix control characters inside strings only
+    result    = []
+    in_string = False
+    escaped   = False
 
-    cleaned = re.sub(
-        r'"(?:[^"\\]|\\.)*"',
-        fix_newlines_in_strings,
-        cleaned,
-        flags=re.DOTALL
-    )
+    for ch in raw:
+        if escaped:
+            result.append(ch)
+            escaped = False
+            continue
 
-    # Remove remaining control characters
-    cleaned = re.sub(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]", "", cleaned)
+        if ch == "\\" and in_string:
+            result.append(ch)
+            escaped = True
+            continue
 
-    return cleaned
+        if ch == '"':
+            in_string = not in_string
+            result.append(ch)
+            continue
+
+        if in_string:
+            if ch == "\n":
+                result.append("\\n")
+            elif ch == "\r":
+                result.append("\\r")
+            elif ch == "\t":
+                result.append("\\t")
+            elif ord(ch) < 32:
+                pass  # skip other control chars
+            else:
+                result.append(ch)
+        else:
+            result.append(ch)
+
+    return "".join(result)
 
 
 # ─────────────────────────────────────────────
@@ -262,7 +282,6 @@ def generate():
 
     all_posts = []
 
-    # Split into two batches: days 1-4 and days 5-7
     batches = [
         (list(range(0, 4)), "Batch 1 — Days 1 to 4"),
         (list(range(4, 7)), "Batch 2 — Days 5 to 7"),
@@ -271,58 +290,49 @@ def generate():
     for batch_indices, batch_label in batches:
         print(f"\n--- {batch_label} ---")
 
-        batch_topics = [chosen_topics[i] for i in batch_indices]
-        batch_days   = [week_days[i]     for i in batch_indices]
-        batch_formats= [POST_FORMATS[i]  for i in batch_indices]
+        batch_topics  = [chosen_topics[i] for i in batch_indices]
+        batch_days    = [week_days[i]     for i in batch_indices]
+        batch_formats = [POST_FORMATS[i]  for i in batch_indices]
 
         batch_prompt = f"""
 You are a senior DevOps engineer writing LinkedIn posts from real hands-on experience.
-You write for technical professionals: DevOps engineers, SREs, platform engineers, hiring managers.
+You write for: DevOps engineers, SREs, platform engineers, hiring managers.
 
 YOUR BACKGROUND:
 {YOUR_PERSONA}
 
-═══════════════════════════════════════════
-POST REQUIREMENTS — follow every rule strictly
-═══════════════════════════════════════════
-
-LENGTH: Every post body must be 180 to 280 words. Count carefully. No exceptions.
-
-STRUCTURE — every post must follow this exact layout:
-
-[HOOK] One punchy specific sentence on its own line.
-[blank line]
-[CONTEXT] 1-2 sentences: why this matters or what triggered this.
-[blank line]
-[BODY] Technical content in the assigned format. Real tool names. Real commands. Real numbers. No vague phrases.
-[blank line]
-[CLOSING QUESTION] One specific question a practitioner would genuinely answer.
-[blank line]
-[HASHTAGS] 3 to 5 hashtags. Always include #DevOps.
+POST REQUIREMENTS:
+- LENGTH: 180 to 280 words per post body. No exceptions.
+- STRUCTURE:
+  Line 1: HOOK — one punchy specific sentence
+  blank line
+  CONTEXT — 1-2 sentences
+  blank line
+  BODY — technical content in assigned format, real tool names, real commands, real numbers
+  blank line
+  CLOSING QUESTION — specific, practitioner-level
+  blank line
+  HASHTAGS — 3 to 5, always include #DevOps
 
 WRITING RULES:
 - First person: I, we, our team
-- Short sentences. One idea per sentence.
+- Short sentences
 - Banned: game-changer, leverage, delve, unlock, journey, synergy, excited to share, thrilled
-- Use \\n between paragraphs — never a real line break inside a JSON string
+- No vague phrases like "best practices" or "improve efficiency"
 
-IMAGE PROMPT RULES — each image_prompt must be a TECHNICAL VISUAL:
-- Visual type: terminal, architecture diagram, dashboard, code diff, infographic
+IMAGE PROMPT RULES:
+- TECHNICAL VISUAL only — no people, no stock photos
 - Dark background #0d1117
-- Accent color: green #00ff88 or cyan #00d4ff
-- Specific technical elements (exact commands, service names, diagram parts)
-- Style: clean, minimal, no people, no watermark
+- Accent: green #00ff88 or cyan #00d4ff
+- Specify: visual type, technical elements, style
+- Clean, minimal, professional, no watermark
 
-═══════════════════════════════════════════
-POSTS TO GENERATE FOR THIS BATCH
-═══════════════════════════════════════════
+POSTS TO GENERATE:
 {chr(10).join(f"Post {i+1} ({batch_days[i]}): TOPIC=[{batch_topics[i]}] FORMAT=[{batch_formats[i]}]" for i in range(len(batch_indices)))}
 
-═══════════════════════════════════════════
-OUTPUT FORMAT
-═══════════════════════════════════════════
-Return ONLY a raw JSON object. No markdown. No backticks. No explanation before or after.
-CRITICAL: All newlines inside string values MUST be written as \\n — never use real line breaks inside JSON strings.
+OUTPUT RULES:
+- Return ONLY raw JSON — no markdown, no backticks, no explanation
+- CRITICAL: newlines inside string values MUST be \\n — never real line breaks inside JSON strings
 
 {{
   "posts": [
@@ -330,9 +340,9 @@ CRITICAL: All newlines inside string values MUST be written as \\n — never use
       "day": "{batch_days[0]}",
       "topic": "exact topic",
       "hook": "first line only, no newlines",
-      "body": "complete post using \\n for paragraph breaks",
+      "body": "complete post using \\n for paragraph breaks — 180 to 280 words",
       "hashtags": "#Tag1 #Tag2 #DevOps",
-      "image_prompt": "technical visual description — no people, no stock photos",
+      "image_prompt": "technical visual — no people",
       "word_count": 0
     }}
   ]
@@ -351,14 +361,13 @@ CRITICAL: All newlines inside string values MUST be written as \\n — never use
                 raw = response.choices[0].message.content
                 print(f"  Raw length: {len(raw)} chars")
 
-                data = json.loads(clean_json(raw))
+                data  = json.loads(clean_json(raw))
                 posts = data.get("posts", [])
 
                 if len(posts) < len(batch_indices):
                     print(f"  Got {len(posts)} posts, expected {len(batch_indices)} — retrying")
                     continue
 
-                # Stamp each post with correct day from our schedule
                 for j, post in enumerate(posts[:len(batch_indices)]):
                     post["day"]          = batch_days[j]
                     post["topic"]        = post.get("topic", batch_topics[j])
@@ -367,20 +376,18 @@ CRITICAL: All newlines inside string values MUST be written as \\n — never use
                     post["generated_at"] = datetime.now(UTC).isoformat()
 
                 all_posts.extend(posts[:len(batch_indices)])
-                print(f"  Got {len(posts[:len(batch_indices)])} posts OK")
+                print(f"  ✅ {len(batch_indices)} posts OK")
                 break
 
             except json.JSONDecodeError as e:
                 print(f"  JSON parse failed attempt {attempt+1}: {e}")
+                Path("outputs/debug_raw.txt").write_text(raw)
                 if attempt == 2:
                     raise
-                continue
-
             except Exception as e:
                 print(f"  Error attempt {attempt+1}: {e}")
                 if attempt == 2:
                     raise
-                continue
 
     if len(all_posts) != 7:
         print(f"WARNING: Expected 7 posts, got {len(all_posts)}")
@@ -397,3 +404,7 @@ CRITICAL: All newlines inside string values MUST be written as \\n — never use
     print(f"\nGenerated {len(all_posts)} posts:\n")
     for p in all_posts:
         print(f"  {p['day']} | {p['topic']} | {p['word_count']} words")
+
+
+if __name__ == "__main__":
+    generate()
