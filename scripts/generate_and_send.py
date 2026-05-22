@@ -160,7 +160,8 @@ def main():
 
     data  = json.loads(POSTS_FILE.read_text())
     posts = data.get("posts", [])
-    week  = data.get("week_start", datetime.utcnow().strftime("%d %b %Y"))
+    from datetime import timezone
+    week  = data.get("week_start", datetime.now(timezone.utc).strftime("%d %b %Y"))
 
     print(f"Loaded {len(posts)} posts — week of {week}")
 
