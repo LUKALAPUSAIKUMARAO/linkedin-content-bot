@@ -200,11 +200,22 @@ def main():
             f"📝 {words} words"
         )
 
+        # Send image prompt as separate message so you can copy it easily
+        image_prompt_msg = (
+            f"🎨 <b>Day {i} — Image Prompt (copy to any AI image generator):</b>\n\n"
+            f"<code>{prompt}</code>"
+        )
+
         if img and img.exists():
             if not tg_send_photo(img, caption):
                 tg_send_message(f"⚠️ Photo upload failed\n\n{caption}")
         else:
             tg_send_message(f"⚠️ <b>Image failed — Day {i}</b>\n\n{caption}")
+
+        time.sleep(1)
+
+        # Send image prompt — copy to Midjourney, Ideogram, DALL-E etc
+        tg_send_message(image_prompt_msg)
 
         time.sleep(1)
 
