@@ -1,0 +1,141 @@
+{
+  "topic": "kubectl commands every DevOps engineer must know",
+  "linkedin_hook": "Mastering kubectl is no longer a choice, it's a necessity for every DevOps engineer working with Kubernetes",
+  "linkedin_intro": "As a seasoned DevOps engineer, I've compiled a list of essential kubectl commands that I use daily to manage and troubleshoot my Kubernetes clusters. In this cheatsheet, I'll share the most critical commands that every DevOps engineer should know. From basic commands to advanced troubleshooting, this cheatsheet has got you covered.",
+  "sections": [
+    {
+      "section_title": "Basic Commands",
+      "items": [
+        {
+          "command": "kubectl get pods",
+          "description": "Lists all pods in the current namespace"
+        },
+        {
+          "command": "kubectl get deployments",
+          "description": "Lists all deployments in the current namespace"
+        },
+        {
+          "command": "kubectl get services",
+          "description": "Lists all services in the current namespace"
+        },
+        {
+          "command": "kubectl get nodes",
+          "description": "Lists all nodes in the cluster"
+        },
+        {
+          "command": "kubectl cluster-info",
+          "description": "Displays information about the cluster"
+        }
+      ]
+    },
+    {
+      "section_title": "Pod Management",
+      "items": [
+        {
+          "command": "kubectl create pod my-pod --image=nginx",
+          "description": "Creates a new pod named my-pod with the nginx image"
+        },
+        {
+          "command": "kubectl delete pod my-pod",
+          "description": "Deletes the pod named my-pod"
+        },
+        {
+          "command": "kubectl describe pod my-pod",
+          "description": "Displays detailed information about the pod named my-pod"
+        },
+        {
+          "command": "kubectl logs my-pod",
+          "description": "Displays the logs of the pod named my-pod"
+        },
+        {
+          "command": "kubectl exec -it my-pod -- /bin/bash",
+          "description": "Executes a command in the pod named my-pod and opens a new shell session"
+        }
+      ]
+    },
+    {
+      "section_title": "Deployment Management",
+      "items": [
+        {
+          "command": "kubectl create deployment my-deployment --image=nginx",
+          "description": "Creates a new deployment named my-deployment with the nginx image"
+        },
+        {
+          "command": "kubectl rollout status deployment my-deployment",
+          "description": "Displays the rollout status of the deployment named my-deployment"
+        },
+        {
+          "command": "kubectl rollout history deployment my-deployment",
+          "description": "Displays the rollout history of the deployment named my-deployment"
+        },
+        {
+          "command": "kubectl rollout undo deployment my-deployment",
+          "description": "Undoes the last rollout of the deployment named my-deployment"
+        },
+        {
+          "command": "kubectl scale deployment my-deployment --replicas=3",
+          "description": "Scales the deployment named my-deployment to 3 replicas"
+        }
+      ]
+    },
+    {
+      "section_title": "Service Management",
+      "items": [
+        {
+          "command": "kubectl create service clusterip my-service --tcp=80:80",
+          "description": "Creates a new clusterip service named my-service that exposes port 80"
+        },
+        {
+          "command": "kubectl get svc",
+          "description": "Lists all services in the current namespace"
+        },
+        {
+          "command": "kubectl describe svc my-service",
+          "description": "Displays detailed information about the service named my-service"
+        },
+        {
+          "command": "kubectl delete svc my-service",
+          "description": "Deletes the service named my-service"
+        },
+        {
+          "command": "kubectl expose deployment my-deployment --type=LoadBalancer --port=80",
+          "description": "Exposes the deployment named my-deployment as a load balancer service on port 80"
+        }
+      ]
+    },
+    {
+      "section_title": "Troubleshooting",
+      "items": [
+        {
+          "command": "kubectl get events",
+          "description": "Lists all events in the current namespace"
+        },
+        {
+          "command": "kubectl describe node my-node",
+          "description": "Displays detailed information about the node named my-node"
+        },
+        {
+          "command": "kubectl top pod my-pod",
+          "description": "Displays the resource usage of the pod named my-pod"
+        },
+        {
+          "command": "kubectl top node my-node",
+          "description": "Displays the resource usage of the node named my-node"
+        },
+        {
+          "command": "kubectl debug my-pod --image=ubuntu",
+          "description": "Creates a new pod for debugging purposes with the ubuntu image"
+        }
+      ]
+    }
+  ],
+  "pro_tips": [
+    "Use kubectl with the --v=5 flag to increase the verbosity of the output and get more detailed information about the commands being executed",
+    "Use kubectl config use-context to switch between different Kubernetes contexts and clusters",
+    "Use kubectl apply -f to apply configuration files to your cluster, and kubectl diff -f to see the differences between the current state and the desired state",
+    "Use kubectl rollout restart to restart all pods in a deployment, and kubectl rollout pause to pause a deployment"
+  ],
+  "linkedin_cta": "What's your go-to kubectl command for troubleshooting issues in your Kubernetes cluster?",
+  "hashtags": "#DevOps #Kubernetes #kubectl #CloudNative",
+  "image_prompt": "Create a professional cheatsheet graphic with a dark background #0d1117, monospace font, and the tool name 'kubectl' as the header in cyan #00d4ff. Organize the commands in a grid layout with green #00ff88 command text and white description text. The design should have a clean and minimal aesthetic, with no watermarks, and be suitable for a LinkedIn carousel first slide. The grid should have clear sections and subsections, with visible headers and footers. The commands should be easy to read and understand, with proper formatting and spacing. The overall design should be modern, sleek, and professional, conveying a sense of expertise and authority in the field of DevOps and Kubernetes."
+}
