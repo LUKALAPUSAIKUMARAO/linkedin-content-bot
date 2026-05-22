@@ -1,16 +1,1 @@
-{
-  "week_start": "Monday 25 May",
-  "posts": [
-    {
-      "day": "Monday 25 May",
-      "topic": "How Kubernetes pod scheduling actually works under the hood",
-      "hook": "I spent 6 hours debugging a Kubernetes pod that wouldn't schedule, only to find the issue was a misconfigured affinity rule.",
-      "body": "I spent 6 hours debugging a Kubernetes pod that wouldn't schedule, only to find the issue was a misconfigured affinity rule.\n\nThis experience made me realize how important it is to understand the underlying mechanics of Kubernetes pod scheduling.\n\nHere are 5 key insights into how Kubernetes pod scheduling works:\n1. The scheduler uses a cache to store pod and node information, which is updated every 30 seconds.\n2. When a pod is created, the scheduler checks for any affinity or anti-affinity rules that may affect its placement.\n3. The scheduler uses a scoring system to determine the best node for a pod, with factors like available resources and network latency taken into account.\n4. If a pod cannot be scheduled, the scheduler will retry every 30 seconds, with a maximum of 5 attempts.\n5. The scheduler can be configured to use different scheduling algorithms, such as the built-in 'default' algorithm or a custom algorithm implemented using a scheduling framework like Kubernetes Scheduler Framework.\n\nWhat's your go-to tool for Kubernetes pod scheduling debugging?",
-      "hashtags": "#Kubernetes #DevOps #Scheduling",
-      "image_prompt": "Dark terminal showing kubectl get pods output with scheduling information, monospace font Fira Code, green #00ff88 highlighting for scheduled pods, subtle dark grid background, clean minimal layout, no watermark",
-      "word_count": 173,
-      "status": "Draft",
-      "generated_at": "2026-05-22T09:41:24.461285+00:00"
-    }
-  ]
-}
+
