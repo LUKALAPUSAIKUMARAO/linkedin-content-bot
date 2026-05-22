@@ -41,7 +41,10 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          mkdir -p outputs
-          git add outputs/
+          mkdir -p outputs/images
+          # Force add — bypasses .gitignore
+          git add -f outputs/posts.json
+          git add -f outputs/trends.json || true
+          git status
           git diff --staged --quiet || git commit -m "Weekly content $(date +%Y-%m-%d)"
           git push origin HEAD:main
