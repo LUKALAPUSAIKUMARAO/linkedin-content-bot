@@ -1,14 +1,12 @@
 {
-  "fetched_at": "2026-05-22T10:11:03.535839",
+  "fetched_at": "2026-05-23T09:06:00.235765",
   "trends": [
-    "Show HN: Freenet, a peer-to-peer platform for decentralized apps",
-    "ParadeDB (YC S23) Is Hiring Distributed Systems/Platform Engineers",
-    "We Reverse-Engineered Docker Sandbox's Undocumented MicroVM API",
+    "The Best Windows is Linux",
     "I decided to build a Kubernetes alternative. Yes, I know I'm crazy",
-    "Pick Boring Technology. Yes, Especially for AI.",
+    "Running a Full Multi-Stage Intrusion Simulation. Every Detection Fired.",
     "I decided to build a Kubernetes alternative. Yes, I know I'm crazy",
     "Four Layers of Validation in Kubernetes with Claude Code",
-    "Beyond the CLI: Building an Enterprise Terraform Impact Dashboard",
+    "I Inherited 47,000 Lines of Terraform Spaghetti \u2014 Here's How I Untangled It Without Burning Production",
     "HashiCorp built an MCP server for writing Terraform. I built one for reviewing it",
     "OpenSRE: Build Your Own AI Incident-Investigation Agent",
     "AIOps That Actually Helps: Start with Telemetry, Correlation, and Safe Automation"
