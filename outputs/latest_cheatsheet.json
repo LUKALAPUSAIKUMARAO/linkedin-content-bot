@@ -1,141 +1,141 @@
 {
-  "topic": "kubectl commands every DevOps engineer must know",
-  "linkedin_hook": "Mastering kubectl is no longer a choice, it's a necessity for every DevOps engineer working with Kubernetes",
-  "linkedin_intro": "As a seasoned DevOps engineer, I've compiled a list of essential kubectl commands that I use daily to manage and troubleshoot my Kubernetes clusters. In this cheatsheet, I'll share the most critical commands that every DevOps engineer should know. From basic commands to advanced troubleshooting, this cheatsheet has got you covered.",
+  "topic": "Kubernetes pod lifecycle and debugging commands",
+  "linkedin_hook": "Master Kubernetes pod management with these essential lifecycle and debugging commands!",
+  "linkedin_intro": "As a DevOps engineer, I've often found myself needing to quickly reference Kubernetes commands to manage and debug pods. This cheatsheet is my go-to resource for streamlining pod lifecycle management and troubleshooting. I've compiled the most useful commands into one place to help you work more efficiently.",
   "sections": [
     {
-      "section_title": "Basic Commands",
+      "section_title": "Basic Pod Management",
       "items": [
         {
           "command": "kubectl get pods",
           "description": "Lists all pods in the current namespace"
         },
         {
-          "command": "kubectl get deployments",
-          "description": "Lists all deployments in the current namespace"
+          "command": "kubectl get pods -o wide",
+          "description": "Lists all pods in the current namespace with detailed information"
         },
         {
-          "command": "kubectl get services",
-          "description": "Lists all services in the current namespace"
+          "command": "kubectl describe pod <pod_name>",
+          "description": "Displays detailed information about a specific pod"
         },
         {
-          "command": "kubectl get nodes",
-          "description": "Lists all nodes in the cluster"
+          "command": "kubectl create -f <pod_yaml_file>",
+          "description": "Creates a new pod from a YAML configuration file"
         },
         {
-          "command": "kubectl cluster-info",
-          "description": "Displays information about the cluster"
+          "command": "kubectl delete pod <pod_name>",
+          "description": "Deletes a specific pod"
         }
       ]
     },
     {
-      "section_title": "Pod Management",
+      "section_title": "Pod Lifecycle Management",
       "items": [
         {
-          "command": "kubectl create pod my-pod --image=nginx",
-          "description": "Creates a new pod named my-pod with the nginx image"
+          "command": "kubectl rollout status deployment/<deployment_name>",
+          "description": "Displays the rollout status of a deployment"
         },
         {
-          "command": "kubectl delete pod my-pod",
-          "description": "Deletes the pod named my-pod"
+          "command": "kubectl rollout history deployment/<deployment_name>",
+          "description": "Displays the rollout history of a deployment"
         },
         {
-          "command": "kubectl describe pod my-pod",
-          "description": "Displays detailed information about the pod named my-pod"
+          "command": "kubectl rollout undo deployment/<deployment_name>",
+          "description": "Undoes the last rollout of a deployment"
         },
         {
-          "command": "kubectl logs my-pod",
-          "description": "Displays the logs of the pod named my-pod"
+          "command": "kubectl scale deployment/<deployment_name> --replicas=<num_replicas>",
+          "description": "Scales the number of replicas of a deployment"
         },
         {
-          "command": "kubectl exec -it my-pod -- /bin/bash",
-          "description": "Executes a command in the pod named my-pod and opens a new shell session"
+          "command": "kubectl annotate pod/<pod_name> <key>=<value>",
+          "description": "Adds an annotation to a pod"
         }
       ]
     },
     {
-      "section_title": "Deployment Management",
+      "section_title": "Debugging and Logging",
       "items": [
         {
-          "command": "kubectl create deployment my-deployment --image=nginx",
-          "description": "Creates a new deployment named my-deployment with the nginx image"
+          "command": "kubectl logs <pod_name>",
+          "description": "Displays the logs of a pod"
         },
         {
-          "command": "kubectl rollout status deployment my-deployment",
-          "description": "Displays the rollout status of the deployment named my-deployment"
+          "command": "kubectl logs <pod_name> -c <container_name>",
+          "description": "Displays the logs of a specific container in a pod"
         },
         {
-          "command": "kubectl rollout history deployment my-deployment",
-          "description": "Displays the rollout history of the deployment named my-deployment"
+          "command": "kubectl logs -f <pod_name>",
+          "description": "Displays the logs of a pod in real-time"
         },
         {
-          "command": "kubectl rollout undo deployment my-deployment",
-          "description": "Undoes the last rollout of the deployment named my-deployment"
+          "command": "kubectl exec -it <pod_name> -- /bin/bash",
+          "description": "Executes a command in a pod and opens a shell session"
         },
         {
-          "command": "kubectl scale deployment my-deployment --replicas=3",
-          "description": "Scales the deployment named my-deployment to 3 replicas"
+          "command": "kubectl debug <pod_name> --image=<debug_image>",
+          "description": "Creates a new pod for debugging with a specified image"
         }
       ]
     },
     {
-      "section_title": "Service Management",
+      "section_title": "Networking and Services",
       "items": [
-        {
-          "command": "kubectl create service clusterip my-service --tcp=80:80",
-          "description": "Creates a new clusterip service named my-service that exposes port 80"
-        },
         {
           "command": "kubectl get svc",
           "description": "Lists all services in the current namespace"
         },
         {
-          "command": "kubectl describe svc my-service",
-          "description": "Displays detailed information about the service named my-service"
+          "command": "kubectl expose pod/<pod_name> --port=<port_number>",
+          "description": "Exposes a pod as a service"
         },
         {
-          "command": "kubectl delete svc my-service",
-          "description": "Deletes the service named my-service"
+          "command": "kubectl get endpoints",
+          "description": "Lists all endpoints in the current namespace"
         },
         {
-          "command": "kubectl expose deployment my-deployment --type=LoadBalancer --port=80",
-          "description": "Exposes the deployment named my-deployment as a load balancer service on port 80"
+          "command": "kubectl describe svc/<service_name>",
+          "description": "Displays detailed information about a service"
+        },
+        {
+          "command": "kubectl port-forward <pod_name> <local_port>:<pod_port>",
+          "description": "Forwards traffic from a local port to a pod port"
         }
       ]
     },
     {
-      "section_title": "Troubleshooting",
+      "section_title": "Persistent Volumes and Storage",
       "items": [
         {
-          "command": "kubectl get events",
-          "description": "Lists all events in the current namespace"
+          "command": "kubectl get pv",
+          "description": "Lists all persistent volumes in the current namespace"
         },
         {
-          "command": "kubectl describe node my-node",
-          "description": "Displays detailed information about the node named my-node"
+          "command": "kubectl get pvc",
+          "description": "Lists all persistent volume claims in the current namespace"
         },
         {
-          "command": "kubectl top pod my-pod",
-          "description": "Displays the resource usage of the pod named my-pod"
+          "command": "kubectl describe pv/<pv_name>",
+          "description": "Displays detailed information about a persistent volume"
         },
         {
-          "command": "kubectl top node my-node",
-          "description": "Displays the resource usage of the node named my-node"
+          "command": "kubectl describe pvc/<pvc_name>",
+          "description": "Displays detailed information about a persistent volume claim"
         },
         {
-          "command": "kubectl debug my-pod --image=ubuntu",
-          "description": "Creates a new pod for debugging purposes with the ubuntu image"
+          "command": "kubectl create -f <storageclass_yaml_file>",
+          "description": "Creates a new storage class from a YAML configuration file"
         }
       ]
     }
   ],
   "pro_tips": [
-    "Use kubectl with the --v=5 flag to increase the verbosity of the output and get more detailed information about the commands being executed",
-    "Use kubectl config use-context to switch between different Kubernetes contexts and clusters",
-    "Use kubectl apply -f to apply configuration files to your cluster, and kubectl diff -f to see the differences between the current state and the desired state",
-    "Use kubectl rollout restart to restart all pods in a deployment, and kubectl rollout pause to pause a deployment"
+    "Use 'kubectl get pods -o jsonpath='{.items[0].status.containerStatuses[0].restartCount}'' to get the restart count of the first container in the first pod",
+    "Use 'kubectl rollout restart deployment/<deployment_name>' to restart all pods in a deployment",
+    "Use 'kubectl top pod/<pod_name> --containers' to display resource usage of all containers in a pod",
+    "Use 'kubectl alpha debug <pod_name> --image=<debug_image> --target=<container_name>' to debug a specific container in a pod"
   ],
-  "linkedin_cta": "What's your go-to kubectl command for troubleshooting issues in your Kubernetes cluster?",
-  "hashtags": "#DevOps #Kubernetes #kubectl #CloudNative",
-  "image_prompt": "Create a professional cheatsheet graphic with a dark background #0d1117, monospace font, and the tool name 'kubectl' as the header in cyan #00d4ff. Organize the commands in a grid layout with green #00ff88 command text and white description text. The design should have a clean and minimal aesthetic, with no watermarks, and be suitable for a LinkedIn carousel first slide. The grid should have clear sections and subsections, with visible headers and footers. The commands should be easy to read and understand, with proper formatting and spacing. The overall design should be modern, sleek, and professional, conveying a sense of expertise and authority in the field of DevOps and Kubernetes."
+  "linkedin_cta": "What's your go-to Kubernetes command for debugging pods?",
+  "hashtags": "#DevOps #Kubernetes #CloudNative #Containerization #PodManagement",
+  "image_prompt": "Create a professional cheatsheet graphic with a dark background #0d1117, monospace font, and the tool name 'Kubernetes' as the header in cyan #00d4ff. Organize the commands in a grid layout with green #00ff88 command text and white description text. The design should have a clean, minimal aesthetic with no watermark, suitable for a LinkedIn carousel first slide. The grid should have clear sections and subsections with visible borders, and the commands should be grouped by category. The font size should be large enough to be easily readable, and the overall design should be visually appealing and easy to navigate."
 }
