@@ -1,82 +1,82 @@
 {
-  "week_start": "Monday 25 May",
+  "week_start": "Monday 01 Jun",
   "posts": [
     {
-      "day": "Monday 25 May",
-      "topic": "Reserved instances vs savings plans — our actual cost analysis",
-      "hook": "We saved 32% on our AWS bill by switching to savings plans",
-      "body": "Our team was tasked with reducing infrastructure costs without sacrificing performance.\n\n Here are 6 key insights from our analysis: \n1. Reserved instances provide a fixed discount of up to 75% for a specific instance type and region. \n2. Savings plans offer a discount of up to 72% on compute usage, regardless of instance type or region. \n3. We found that savings plans were more flexible and easier to manage, as they don't require a specific instance type or region. \n4. Our usage patterns showed that we could save an additional 10% by using a combination of reserved instances and savings plans. \n5. We used AWS Cost Explorer to track our usage and optimize our instance types and regions. \n6. We also used AWS Organizations to manage our accounts and apply savings plans across multiple accounts.\n\n What approach do you take to optimize your cloud costs?",
-      "hashtags": "#DevOps #CloudCostOptimization #AWS",
-      "image_prompt": "A dark background #0d1117 diagram showing a comparison of reserved instances and savings plans, with green #00ff88 accents highlighting the cost savings, in a minimal and professional style",
+      "day": "Monday 01 Jun",
+      "topic": "Azure DevOps vs GitHub Actions — enterprise perspective",
+      "hook": "I've migrated 20+ projects from Azure DevOps to GitHub Actions and seen a 30% drop in CI/CD costs",
+      "body": "Our team was using Azure DevOps for years, but we decided to make the switch to GitHub Actions.\n\n Here are 5 key insights from our experience: \n 1. GitHub Actions provides more flexibility in terms of custom workflows and integrations with other tools. We used the `actions/checkout` action to checkout our code and then ran our tests using `run: npm test`. \n 2. Azure DevOps has better support for Azure-specific services, but GitHub Actions has a more extensive marketplace for third-party integrations. We used the `azure/login` action to authenticate with Azure and then deployed to Azure using the `azure/webapps-deploy` action. \n 3. GitHub Actions has a more user-friendly interface for managing and monitoring pipelines. We used the `github/actions` API to automate our workflow and reduce manual interventions. \n 4. Azure DevOps provides more advanced features for test planning and management, but GitHub Actions has better support for code review and collaboration. We used the `github/pull-request` action to automate our code review process. \n 5. GitHub Actions has a more cost-effective pricing model, especially for large-scale enterprises. We reduced our CI/CD costs by 30% after switching to GitHub Actions.\n\n What are the biggest challenges you've faced when migrating from Azure DevOps to GitHub Actions?",
+      "hashtags": "#AzureDevOps #GitHubActions #DevOps",
+      "image_prompt": "A screenshot of a GitHub Actions workflow with a dark background #0d1117 and green #00ff88 accents, showing the `actions/checkout` and `azure/login` actions",
+      "word_count": 198,
+      "status": "Draft",
+      "generated_at": "2026-05-30T09:23:28.266414+00:00"
+    },
+    {
+      "day": "Tuesday 02 Jun",
+      "topic": "AKS vs EKS — Kubernetes on Azure vs AWS comparison",
+      "hook": "I've managed Kubernetes clusters on both AKS and EKS, and the differences are more than just pricing",
+      "body": "When it comes to running Kubernetes in the cloud, AKS and EKS are two popular options.\n\n What nobody tells you is: \n 1. AKS has better support for Azure-specific services, but EKS has more extensive support for AWS services. We used the `azure/aks` API to manage our AKS cluster and the `aws/eks` API to manage our EKS cluster. \n 2. EKS has a more established ecosystem of third-party tools and integrations, but AKS is catching up quickly. We used the `kubernetes/eks` API to automate our EKS workflow. \n 3. AKS has a more user-friendly interface for managing and monitoring clusters, but EKS has better support for multi-tenancy and security. We used the `azure/aks` API to automate our AKS workflow. \n 4. EKS has a more cost-effective pricing model, especially for large-scale enterprises. We reduced our Kubernetes costs by 25% after switching to EKS.\n\n What are the most important factors for you when choosing between AKS and EKS for your Kubernetes needs?",
+      "hashtags": "#AKS #EKS #Kubernetes",
+      "image_prompt": "An architecture diagram of an EKS cluster with a dark background #0d1117 and cyan #00d4ff accents, showing the `aws/eks` API and `kubernetes/eks` API",
+      "word_count": 157,
+      "status": "Draft",
+      "generated_at": "2026-05-30T09:23:28.266455+00:00"
+    },
+    {
+      "day": "Wednesday 03 Jun",
+      "topic": "Azure managed identities — eliminating service account passwords",
+      "hook": "We've eliminated service account passwords from our Azure setup using managed identities, and it's been a game-changer for security",
+      "body": "Before, we were using service account passwords to authenticate our Azure services.\n\n Here's what changed: we enabled managed identities for our Azure resources using the `az identity create` command, and then assigned the necessary roles using the `az role assignment create` command. We also updated our code to use the `DefaultAzureCredential` class to authenticate with Azure services. \n The old way: we had to manage and rotate service account passwords manually, which was time-consuming and prone to errors. \n The new way: we use managed identities to authenticate our Azure services, which eliminates the need for service account passwords and reduces the risk of credential leaks. \n Measurable result: we've reduced our security risks by 40% and saved 10 hours of manual work per week.\n\n How do you plan to implement Azure managed identities in your setup to improve security and reduce toil?",
+      "hashtags": "#AzureManagedIdentities #Security #DevOps",
+      "image_prompt": "A screenshot of the Azure portal with a dark background #0d1117 and green #00ff88 accents, showing the managed identities section",
+      "word_count": 140,
+      "status": "Draft",
+      "generated_at": "2026-05-30T09:23:28.266466+00:00"
+    },
+    {
+      "day": "Thursday 04 Jun",
+      "topic": "Azure Policy for governance at scale — our setup",
+      "hook": "We've implemented Azure Policy to govern our Azure resources at scale, and it's been a huge success",
+      "body": "Myth: Azure Policy is only for compliance and security.\n\n Reality: Azure Policy is a powerful tool for governing Azure resources at scale, and can be used for a wide range of use cases, including cost optimization and resource management. We used the `az policy assignment create` command to assign policies to our Azure resources. \n Myth: Azure Policy is complex and difficult to implement.\n\n Reality: Azure Policy is relatively simple to implement, and can be integrated with existing workflows and tools. We used the `az policy definition create` command to create custom policies. \n Myth: Azure Policy only works for Azure resources.\n\n Reality: Azure Policy can be used to govern resources across multiple clouds and on-premises environments. We used the `az policy assignment create` command to assign policies to our non-Azure resources. \n Myth: Azure Policy is a replacement for existing governance tools.\n\n Reality: Azure Policy is a complementary tool that can be used in conjunction with existing governance tools to provide a more comprehensive governance framework. We used the `az policy assignment create` command to integrate Azure Policy with our existing tools.\n\n What are the biggest challenges you've faced when implementing Azure Policy in your setup, and how did you overcome them?",
+      "hashtags": "#AzurePolicy #Governance #DevOps",
+      "image_prompt": "An architecture diagram of an Azure Policy setup with a dark background #0d1117 and cyan #00d4ff accents, showing the `az policy assignment create` command",
+      "word_count": 200,
+      "status": "Draft",
+      "generated_at": "2026-05-30T09:23:28.266482+00:00"
+    },
+    {
+      "day": "Friday 05 Jun",
+      "topic": "How we reduced Azure costs by 40% in one quarter",
+      "hook": "We cut our Azure bill by 40% in one quarter using five key tools",
+      "body": "I work with a mid-sized SaaS product company where cost optimization is crucial.\n\n We used Azure Cost Estimator to forecast costs, Azure Advisor to identify underutilized resources, Azure Monitor to track usage, Azure Resource Graph to analyze resource utilization, and Azure Pricing API to automate price tracking. For example, we used the Azure Pricing API to compare prices across regions and reduced our spending on Azure VMs by 20% by switching to spot instances. We also used Azure Cost Estimator to forecast our costs and adjust our usage accordingly, resulting in a 15% reduction in our overall Azure spend. Additionally, we used Azure Advisor to identify underutilized resources and terminated them, saving us 5% on our Azure bill. By using these tools, we were able to reduce our Azure costs by 40% in one quarter.\n\n What tools do you use to optimize your cloud costs?",
+      "hashtags": "#Azure #CostOptimization #DevOps",
+      "image_prompt": "A dark background screenshot of Azure Cost Estimator with green accents, showing a 40% cost reduction",
       "word_count": 145,
       "status": "Draft",
-      "generated_at": "2026-05-23T09:06:04.264044+00:00"
+      "generated_at": "2026-05-30T09:24:02.304342+00:00"
     },
     {
-      "day": "Tuesday 26 May",
-      "topic": "AWS Transit Gateway — simplifying multi-VPC networking",
-      "hook": "We reduced our VPC peering complexity by 90% with AWS Transit Gateway",
-      "body": "Many of us have dealt with the complexity of VPC peering and routing.\n\n What nobody tells you is: \n1. AWS Transit Gateway can handle up to 5000 attachments, making it a highly scalable solution. \n2. It supports both IPv4 and IPv6, allowing for dual-stack networking. \n3. You can use AWS Transit Gateway to connect VPCs across different AWS accounts and regions. \n4. It provides network segmentation and isolation using route tables and network ACLs.\n\n How do you handle multi-VPC networking in your AWS environment?",
-      "hashtags": "#AWS #Networking #DevOps",
-      "image_prompt": "A technical illustration of an AWS Transit Gateway architecture, with cyan #00d4ff accents highlighting the attachments and route tables, on a dark background #0d1117",
-      "word_count": 84,
+      "day": "Saturday 06 Jun",
+      "topic": "Azure Monitor vs Datadog — observability stack decision",
+      "hook": "Our team spent 12 hours debugging a production outage that could have been caught earlier with better monitoring",
+      "body": "I recall an incident where our application was throwing errors due to a misconfigured Azure Storage queue.\n\n The issue started at 2am and our team was paged. We used Azure Monitor to collect logs and metrics, but the data was not providing clear insights. We then switched to Datadog, which provided more detailed information about the issue. We used the Datadog dashboard to identify the root cause of the problem, which was a misconfigured queue. We then used Azure Monitor to collect more data and confirm the issue. The debug steps involved checking the queue configuration, verifying the code changes, and testing the application. We learned that having both Azure Monitor and Datadog in our observability stack helped us to identify and debug the issue faster.\n\n How do you choose between Azure Monitor and Datadog for your observability needs?",
+      "hashtags": "#AzureMonitor #Datadog #Observability",
+      "image_prompt": "A dark background diagram showing Azure Monitor and Datadog integration with cyan accents",
+      "word_count": 139,
       "status": "Draft",
-      "generated_at": "2026-05-23T09:06:04.264062+00:00"
+      "generated_at": "2026-05-30T09:24:02.304366+00:00"
     },
     {
-      "day": "Wednesday 27 May",
-      "topic": "AWS WAF setup that actually blocks attacks",
-      "hook": "Our AWS WAF setup blocked 99.9% of malicious traffic",
-      "body": "We used to rely on a basic AWS WAF setup that didn't provide adequate protection.\n\n Before, our setup looked like this: \n- No rate-based rules \n- No IP set filtering \n- No custom rules \n After our overhaul, our setup now includes: \n- Rate-based rules to limit traffic from specific IP addresses \n- IP set filtering to block known malicious IP addresses \n- Custom rules to detect and block SQL injection and cross-site scripting attacks \n The result was a 99.9% reduction in malicious traffic.\n\n What's your approach to setting up an effective AWS WAF?",
-      "hashtags": "#AWS #Security #DevOps",
-      "image_prompt": "A dark background #0d1117 diagram showing a before-and-after comparison of an AWS WAF setup, with green #00ff88 accents highlighting the custom rules and IP set filtering, in a clean and minimal style",
-      "word_count": 93,
+      "day": "Sunday 07 Jun",
+      "topic": "Azure Blob Storage patterns for high-throughput workloads",
+      "hook": "I learned the hard way that using the right Azure Blob Storage pattern can make or break your application's performance",
+      "body": "As a DevOps engineer, I have worked with high-throughput workloads that require optimized storage solutions.\n\n My advice is to use the Azure Blob Storage Data Lake pattern, which provides a scalable and performant storage solution for big data and analytics workloads. For example, we used this pattern to store and process large amounts of log data, which resulted in a 30% increase in throughput and a 25% reduction in latency. We also used Azure Storage queues to handle the data ingestion and processing, which improved the overall performance of the system. Additionally, we implemented data partitioning and caching to further optimize the storage and retrieval of data.\n\n What Azure Blob Storage pattern do you use for your high-throughput workloads?",
+      "hashtags": "#AzureBlobStorage #HighThroughput #DevOps",
+      "image_prompt": "A dark background architecture diagram showing Azure Blob Storage Data Lake pattern with green accents",
+      "word_count": 119,
       "status": "Draft",
-      "generated_at": "2026-05-23T09:06:04.264070+00:00"
-    },
-    {
-      "day": "Thursday 28 May",
-      "topic": "How we audit AWS permissions across 15 accounts",
-      "hook": "We automated our AWS permission auditing using IAM Access Analyzer",
-      "body": "Many of us have dealt with the complexity of auditing AWS permissions.\n\n Here are 4 myths vs reality: \n1. Myth: Manual auditing is sufficient. Reality: Automated tools like IAM Access Analyzer can help identify and remediate permission issues at scale. \n2. Myth: Auditing permissions is a one-time task. Reality: Permissions can change frequently, requiring continuous monitoring and auditing. \n3. Myth: Only admins need permission auditing. Reality: All roles and users require permission auditing to ensure least privilege access. \n4. Myth: Auditing permissions is a compliance-only task. Reality: Auditing permissions is essential for security and reducing the risk of data breaches.\n\n How do you handle AWS permission auditing in your organization?",
-      "hashtags": "#AWS #Security #DevOps",
-      "image_prompt": "A technical illustration of an AWS IAM Access Analyzer workflow, with cyan #00d4ff accents highlighting the automated auditing and remediation, on a dark background #0d1117",
-      "word_count": 110,
-      "status": "Draft",
-      "generated_at": "2026-05-23T09:06:04.264078+00:00"
-    },
-    {
-      "day": "Friday 29 May",
-      "topic": "AWS Fargate vs EC2 — when serverless containers make sense",
-      "hook": "I've seen 30% cost savings by migrating our containerized apps from EC2 to AWS Fargate",
-      "body": "We use AWS Fargate to run our containerized applications without managing servers.\n\n Our team utilizes the following tools to manage Fargate: AWS CLI with the `aws ecs create-cluster` command to create clusters, Terraform with the `aws_ecs_cluster` resource to manage infrastructure as code, Docker to build and push container images, Kubernetes with the `kubectl` command to manage and deploy containerized apps, and AWS CloudWatch with the `aws cloudwatch logs` command to monitor and debug our applications. For example, we use the `aws ecs run-task` command to run a one-off task on Fargate, such as a database migration.\n\n What are your experiences with serverless containers on AWS?",
-      "hashtags": "#AWS #Fargate #DevOps",
-      "image_prompt": "A dark background technical diagram showing AWS Fargate architecture with green accent, style: clean and minimal",
-      "word_count": 105,
-      "status": "Draft",
-      "generated_at": "2026-05-23T09:06:37.019124+00:00"
-    },
-    {
-      "day": "Saturday 30 May",
-      "topic": "EBS vs EFS vs S3 — storage decision guide from real use cases",
-      "hook": "Our SaaS app was down for 2 hours due to an EBS volume running out of space",
-      "body": "It was 2am when our pager went off, and our team sprang into action to debug the issue.\n\n We quickly realized that one of our EBS volumes was out of space, causing our database to become unresponsive. We used the `aws ec2 describe-volumes` command to identify the problematic volume, and then used the `aws ec2 modify-volume` command to increase its size. We also used the `df -h` command to verify the available disk space on our instances. To prevent similar incidents in the future, we decided to implement a monitoring system using AWS CloudWatch, which would alert us when our EBS volumes were running low on space.\n\n What strategies do you use to prevent storage-related outages?",
-      "hashtags": "#AWS #Storage #DevOps",
-      "image_prompt": "A dark background technical diagram showing EBS, EFS, and S3 storage options with cyan accent, style: professional and minimal",
-      "word_count": 116,
-      "status": "Draft",
-      "generated_at": "2026-05-23T09:06:37.019183+00:00"
-    },
-    {
-      "day": "Sunday 31 May",
-      "topic": "How we use AWS Config to enforce compliance automatically",
-      "hook": "I strongly believe that automation is key to enforcing compliance in the cloud",
-      "body": "Our team uses AWS Config to automatically enforce compliance and governance policies across our AWS infrastructure.\n\n For example, we use AWS Config to monitor and enforce compliance with PCI-DSS requirements, such as ensuring that all EC2 instances have the latest security patches installed. We also use AWS Config to monitor and enforce compliance with internal security policies, such as ensuring that all S3 buckets have server-side encryption enabled. To automate compliance, we use AWS Config with AWS Lambda, which triggers a Lambda function whenever a non-compliant resource is detected.\n\n What advice would you give to someone just starting to implement automated compliance in their organization?",
-      "hashtags": "#AWS #Compliance #DevOps",
-      "image_prompt": "A dark background technical diagram showing AWS Config architecture with green accent, style: clean and professional",
-      "word_count": 105,
-      "status": "Draft",
-      "generated_at": "2026-05-23T09:06:37.019192+00:00"
+      "generated_at": "2026-05-30T09:24:02.304376+00:00"
     }
   ]
 }
