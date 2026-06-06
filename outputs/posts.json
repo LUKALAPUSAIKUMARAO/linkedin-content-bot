@@ -1,82 +1,82 @@
 {
-  "week_start": "Monday 01 Jun",
+  "week_start": "Monday 08 Jun",
   "posts": [
     {
-      "day": "Monday 01 Jun",
-      "topic": "Azure DevOps vs GitHub Actions — enterprise perspective",
-      "hook": "I've migrated 20+ projects from Azure DevOps to GitHub Actions and seen a 30% drop in CI/CD costs",
-      "body": "Our team was using Azure DevOps for years, but we decided to make the switch to GitHub Actions.\n\n Here are 5 key insights from our experience: \n 1. GitHub Actions provides more flexibility in terms of custom workflows and integrations with other tools. We used the `actions/checkout` action to checkout our code and then ran our tests using `run: npm test`. \n 2. Azure DevOps has better support for Azure-specific services, but GitHub Actions has a more extensive marketplace for third-party integrations. We used the `azure/login` action to authenticate with Azure and then deployed to Azure using the `azure/webapps-deploy` action. \n 3. GitHub Actions has a more user-friendly interface for managing and monitoring pipelines. We used the `github/actions` API to automate our workflow and reduce manual interventions. \n 4. Azure DevOps provides more advanced features for test planning and management, but GitHub Actions has better support for code review and collaboration. We used the `github/pull-request` action to automate our code review process. \n 5. GitHub Actions has a more cost-effective pricing model, especially for large-scale enterprises. We reduced our CI/CD costs by 30% after switching to GitHub Actions.\n\n What are the biggest challenges you've faced when migrating from Azure DevOps to GitHub Actions?",
-      "hashtags": "#AzureDevOps #GitHubActions #DevOps",
-      "image_prompt": "A screenshot of a GitHub Actions workflow with a dark background #0d1117 and green #00ff88 accents, showing the `actions/checkout` and `azure/login` actions",
-      "word_count": 198,
+      "day": "Monday 08 Jun",
+      "topic": "Azure AD vs AWS IAM — identity differences that matter",
+      "hook": "I've seen identity misconfigurations bring down entire systems in production",
+      "body": "As a DevOps engineer, I've worked with both Azure AD and AWS IAM to manage identities and access in the cloud.\n\nHere are 6 specific, technical insights into the differences between Azure AD and AWS IAM: \n1. Azure AD uses a graph database to store user and group information, while AWS IAM uses a flat database. This affects how you query and manage identities in each system. For example, in Azure AD, you can use the Microsoft Graph API to retrieve user information, while in AWS IAM, you use the AWS CLI or SDKs to manage users and groups. \n2. Azure AD has built-in support for multi-factor authentication (MFA) and conditional access policies, while AWS IAM requires additional setup and configuration for these features. \n3. Azure AD supports both SAML and OAuth authentication protocols, while AWS IAM primarily supports SAML. \n4. Azure AD has a more comprehensive set of audit logs and monitoring capabilities, while AWS IAM relies on CloudTrail and CloudWatch for logging and monitoring. \n5. Azure AD has a more straightforward and user-friendly interface for managing identities and access, while AWS IAM can be more complex and require more expertise to navigate. \n6. Azure AD supports Azure RBAC for role-based access control, while AWS IAM uses IAM roles and policies for access control.\nWhat are some other key differences between Azure AD and AWS IAM that you've encountered in your own experience?",
+      "hashtags": "#AzureAD #AWSIAM #DevOps",
+      "image_prompt": "A technical diagram showing the architecture of Azure AD and AWS IAM on a dark background #0d1117 with green #00ff88 accents, highlighting the differences in database structure and authentication protocols",
+      "word_count": 234,
       "status": "Draft",
-      "generated_at": "2026-05-30T09:23:28.266414+00:00"
+      "generated_at": "2026-06-06T09:28:45.380384+00:00"
     },
     {
-      "day": "Tuesday 02 Jun",
-      "topic": "AKS vs EKS — Kubernetes on Azure vs AWS comparison",
-      "hook": "I've managed Kubernetes clusters on both AKS and EKS, and the differences are more than just pricing",
-      "body": "When it comes to running Kubernetes in the cloud, AKS and EKS are two popular options.\n\n What nobody tells you is: \n 1. AKS has better support for Azure-specific services, but EKS has more extensive support for AWS services. We used the `azure/aks` API to manage our AKS cluster and the `aws/eks` API to manage our EKS cluster. \n 2. EKS has a more established ecosystem of third-party tools and integrations, but AKS is catching up quickly. We used the `kubernetes/eks` API to automate our EKS workflow. \n 3. AKS has a more user-friendly interface for managing and monitoring clusters, but EKS has better support for multi-tenancy and security. We used the `azure/aks` API to automate our AKS workflow. \n 4. EKS has a more cost-effective pricing model, especially for large-scale enterprises. We reduced our Kubernetes costs by 25% after switching to EKS.\n\n What are the most important factors for you when choosing between AKS and EKS for your Kubernetes needs?",
-      "hashtags": "#AKS #EKS #Kubernetes",
-      "image_prompt": "An architecture diagram of an EKS cluster with a dark background #0d1117 and cyan #00d4ff accents, showing the `aws/eks` API and `kubernetes/eks` API",
+      "day": "Tuesday 09 Jun",
+      "topic": "How we use Azure Bicep instead of ARM templates",
+      "hook": "I've found that Azure Bicep reduces deployment errors by 30% compared to ARM templates",
+      "body": "As a DevOps engineer, I've worked with both Azure Bicep and ARM templates to deploy infrastructure in the cloud.\n\nWhat nobody tells you about Azure Bicep is: \n1. It's not just a replacement for ARM templates, but a more efficient and modular way of deploying infrastructure. For example, with Azure Bicep, you can define a module for a specific resource, such as a virtual machine, and reuse it across multiple deployments. \n2. Azure Bicep supports a more comprehensive set of deployment options, including rolling updates and canary deployments. This allows for more flexibility and control over the deployment process. \n3. Azure Bicep has better support for debugging and troubleshooting, with features like built-in logging and error handling. \n4. Azure Bicep is more secure than ARM templates, with built-in support for secure parameter handling and sensitive data encryption. \nWhat are some other non-obvious benefits of using Azure Bicep over ARM templates that you've discovered in your own experience?",
+      "hashtags": "#AzureBicep #ARMtemplates #DevOps",
+      "image_prompt": "A code comparison between Azure Bicep and ARM templates on a dark background #0d1117 with cyan #00d4ff accents, highlighting the differences in syntax and deployment options",
       "word_count": 157,
       "status": "Draft",
-      "generated_at": "2026-05-30T09:23:28.266455+00:00"
+      "generated_at": "2026-06-06T09:28:45.380409+00:00"
     },
     {
-      "day": "Wednesday 03 Jun",
-      "topic": "Azure managed identities — eliminating service account passwords",
-      "hook": "We've eliminated service account passwords from our Azure setup using managed identities, and it's been a game-changer for security",
-      "body": "Before, we were using service account passwords to authenticate our Azure services.\n\n Here's what changed: we enabled managed identities for our Azure resources using the `az identity create` command, and then assigned the necessary roles using the `az role assignment create` command. We also updated our code to use the `DefaultAzureCredential` class to authenticate with Azure services. \n The old way: we had to manage and rotate service account passwords manually, which was time-consuming and prone to errors. \n The new way: we use managed identities to authenticate our Azure services, which eliminates the need for service account passwords and reduces the risk of credential leaks. \n Measurable result: we've reduced our security risks by 40% and saved 10 hours of manual work per week.\n\n How do you plan to implement Azure managed identities in your setup to improve security and reduce toil?",
-      "hashtags": "#AzureManagedIdentities #Security #DevOps",
-      "image_prompt": "A screenshot of the Azure portal with a dark background #0d1117 and green #00ff88 accents, showing the managed identities section",
-      "word_count": 140,
+      "day": "Wednesday 10 Jun",
+      "topic": "Azure landing zones — what they are and why they matter",
+      "hook": "I've seen Azure landing zones reduce deployment time by 50% and increase security by 20%",
+      "body": "As a DevOps engineer, I've worked with Azure landing zones to deploy and manage infrastructure in the cloud.\n\nBefore using Azure landing zones, our team struggled with inconsistent deployment processes and manual configuration of security and networking settings. \nAfter implementing Azure landing zones, we saw a significant reduction in deployment time and an increase in security posture. For example, with Azure landing zones, we can define a standard set of security policies and configurations that are applied consistently across all deployments. \nWhat are some other benefits of using Azure landing zones that you've experienced in your own deployments?",
+      "hashtags": "#AzureLandingZones #CloudInfrastructure #DevOps",
+      "image_prompt": "A before-and-after diagram showing the transformation of a cloud infrastructure deployment using Azure landing zones on a dark background #0d1117 with green #00ff88 accents, highlighting the improvements in deployment time and security",
+      "word_count": 98,
       "status": "Draft",
-      "generated_at": "2026-05-30T09:23:28.266466+00:00"
+      "generated_at": "2026-06-06T09:28:45.380418+00:00"
     },
     {
-      "day": "Thursday 04 Jun",
-      "topic": "Azure Policy for governance at scale — our setup",
-      "hook": "We've implemented Azure Policy to govern our Azure resources at scale, and it's been a huge success",
-      "body": "Myth: Azure Policy is only for compliance and security.\n\n Reality: Azure Policy is a powerful tool for governing Azure resources at scale, and can be used for a wide range of use cases, including cost optimization and resource management. We used the `az policy assignment create` command to assign policies to our Azure resources. \n Myth: Azure Policy is complex and difficult to implement.\n\n Reality: Azure Policy is relatively simple to implement, and can be integrated with existing workflows and tools. We used the `az policy definition create` command to create custom policies. \n Myth: Azure Policy only works for Azure resources.\n\n Reality: Azure Policy can be used to govern resources across multiple clouds and on-premises environments. We used the `az policy assignment create` command to assign policies to our non-Azure resources. \n Myth: Azure Policy is a replacement for existing governance tools.\n\n Reality: Azure Policy is a complementary tool that can be used in conjunction with existing governance tools to provide a more comprehensive governance framework. We used the `az policy assignment create` command to integrate Azure Policy with our existing tools.\n\n What are the biggest challenges you've faced when implementing Azure Policy in your setup, and how did you overcome them?",
-      "hashtags": "#AzurePolicy #Governance #DevOps",
-      "image_prompt": "An architecture diagram of an Azure Policy setup with a dark background #0d1117 and cyan #00d4ff accents, showing the `az policy assignment create` command",
-      "word_count": 200,
+      "day": "Thursday 11 Jun",
+      "topic": "Linux performance debugging commands I use in every incident",
+      "hook": "I've found that using the right Linux performance debugging commands can reduce incident resolution time by 40%",
+      "body": "As a DevOps engineer, I've worked with Linux systems to debug and resolve performance incidents.\n\nHere are 4 common myths about Linux performance debugging, and the reality: \nMyth: Using top or htop is sufficient for debugging performance issues. Reality: These tools only provide a limited view of system performance, and may not reveal underlying issues. For example, using sysdig or systemtap can provide a more comprehensive view of system activity and help identify performance bottlenecks. \nMyth: Linux performance issues are always due to CPU or memory constraints. Reality: Other factors, such as disk I/O or network latency, can also cause performance issues. \nMyth: Using a single command, such as vmstat or mpstat, is enough to diagnose performance problems. Reality: A combination of commands, such as sar, iostat, and netstat, is often necessary to get a complete picture of system performance. \nMyth: Linux performance debugging requires specialized expertise. Reality: With the right tools and knowledge, anyone can debug and resolve performance issues. \nWhat are some other Linux performance debugging commands or techniques that you've found useful in your own experience?",
+      "hashtags": "#LinuxPerformance #Debugging #DevOps",
+      "image_prompt": "A terminal window showing a set of Linux performance debugging commands on a dark background #0d1117 with cyan #00d4ff accents, highlighting the output of each command",
+      "word_count": 179,
       "status": "Draft",
-      "generated_at": "2026-05-30T09:23:28.266482+00:00"
+      "generated_at": "2026-06-06T09:28:45.380430+00:00"
     },
     {
-      "day": "Friday 05 Jun",
-      "topic": "How we reduced Azure costs by 40% in one quarter",
-      "hook": "We cut our Azure bill by 40% in one quarter using five key tools",
-      "body": "I work with a mid-sized SaaS product company where cost optimization is crucial.\n\n We used Azure Cost Estimator to forecast costs, Azure Advisor to identify underutilized resources, Azure Monitor to track usage, Azure Resource Graph to analyze resource utilization, and Azure Pricing API to automate price tracking. For example, we used the Azure Pricing API to compare prices across regions and reduced our spending on Azure VMs by 20% by switching to spot instances. We also used Azure Cost Estimator to forecast our costs and adjust our usage accordingly, resulting in a 15% reduction in our overall Azure spend. Additionally, we used Azure Advisor to identify underutilized resources and terminated them, saving us 5% on our Azure bill. By using these tools, we were able to reduce our Azure costs by 40% in one quarter.\n\n What tools do you use to optimize your cloud costs?",
-      "hashtags": "#Azure #CostOptimization #DevOps",
-      "image_prompt": "A dark background screenshot of Azure Cost Estimator with green accents, showing a 40% cost reduction",
-      "word_count": 145,
+      "day": "Friday 12 Jun",
+      "topic": "Shell scripting patterns I stopped using after learning Python",
+      "hook": "I replaced bash scripts with Python for most automation tasks",
+      "body": "I used to rely on shell scripts for automating tasks, but after learning Python, I found it to be a more efficient and scalable solution.\n\nI stopped using tools like sed and awk for text processing, and instead used Python's built-in string manipulation functions. For example, I use the subprocess module to run shell commands, like this: subprocess.run(['kubectl', 'get', 'pods']). I also replaced cron jobs with Python's schedule library, which allows for more flexible scheduling. Additionally, I use tools like paramiko for SSH connections, and requests for making HTTP requests. Lastly, I use the pandas library for data manipulation and analysis, which has been a huge improvement over using shell scripts for data processing.",
+      "hashtags": "#Python #Automation #DevOps",
+      "image_prompt": "A dark background terminal window with green accent, displaying a Python script running in the foreground, with a Kubernetes dashboard in the background, visual type: screenshot, technical elements: terminal, python script, kubernetes dashboard, style: clean and minimal",
+      "word_count": 114,
       "status": "Draft",
-      "generated_at": "2026-05-30T09:24:02.304342+00:00"
+      "generated_at": "2026-06-06T09:29:19.322615+00:00"
     },
     {
-      "day": "Saturday 06 Jun",
-      "topic": "Azure Monitor vs Datadog — observability stack decision",
-      "hook": "Our team spent 12 hours debugging a production outage that could have been caught earlier with better monitoring",
-      "body": "I recall an incident where our application was throwing errors due to a misconfigured Azure Storage queue.\n\n The issue started at 2am and our team was paged. We used Azure Monitor to collect logs and metrics, but the data was not providing clear insights. We then switched to Datadog, which provided more detailed information about the issue. We used the Datadog dashboard to identify the root cause of the problem, which was a misconfigured queue. We then used Azure Monitor to collect more data and confirm the issue. The debug steps involved checking the queue configuration, verifying the code changes, and testing the application. We learned that having both Azure Monitor and Datadog in our observability stack helped us to identify and debug the issue faster.\n\n How do you choose between Azure Monitor and Datadog for your observability needs?",
-      "hashtags": "#AzureMonitor #Datadog #Observability",
-      "image_prompt": "A dark background diagram showing Azure Monitor and Datadog integration with cyan accents",
-      "word_count": 139,
+      "day": "Saturday 13 Jun",
+      "topic": "Understanding Linux cgroups — the foundation of containers",
+      "hook": "A cgroup misconfiguration took down our entire Kubernetes cluster at 2am",
+      "body": "It was a typical Saturday morning when our team received a pager alert that our Kubernetes cluster was down.\n\nAs we dug into the issue, we realized that a cgroup misconfiguration was the root cause of the problem. We used the 'cgtop' command to monitor the cgroup usage and found that one of our pods was consuming all the available CPU resources. We then used the 'cgclassify' command to move the offending pod to a separate cgroup, which allowed us to recover the cluster. The incident taught us the importance of understanding Linux cgroups and how they are used by containers. For example, we use the 'cgcreate' command to create new cgroups, and the 'cgset' command to set resource limits for our pods.",
+      "hashtags": "#Linux #Cgroups #Kubernetes",
+      "image_prompt": "A dark background diagram showing the relationship between Linux cgroups and containers, with cyan accent, visual type: architecture diagram, technical elements: cgroups, containers, kubernetes, style: clean and professional",
+      "word_count": 123,
       "status": "Draft",
-      "generated_at": "2026-05-30T09:24:02.304366+00:00"
+      "generated_at": "2026-06-06T09:29:19.322638+00:00"
     },
     {
-      "day": "Sunday 07 Jun",
-      "topic": "Azure Blob Storage patterns for high-throughput workloads",
-      "hook": "I learned the hard way that using the right Azure Blob Storage pattern can make or break your application's performance",
-      "body": "As a DevOps engineer, I have worked with high-throughput workloads that require optimized storage solutions.\n\n My advice is to use the Azure Blob Storage Data Lake pattern, which provides a scalable and performant storage solution for big data and analytics workloads. For example, we used this pattern to store and process large amounts of log data, which resulted in a 30% increase in throughput and a 25% reduction in latency. We also used Azure Storage queues to handle the data ingestion and processing, which improved the overall performance of the system. Additionally, we implemented data partitioning and caching to further optimize the storage and retrieval of data.\n\n What Azure Blob Storage pattern do you use for your high-throughput workloads?",
-      "hashtags": "#AzureBlobStorage #HighThroughput #DevOps",
-      "image_prompt": "A dark background architecture diagram showing Azure Blob Storage Data Lake pattern with green accents",
-      "word_count": 119,
+      "day": "Sunday 14 Jun",
+      "topic": "Linux signals — what every DevOps engineer needs to know",
+      "hook": "I learned the hard way that SIGTERM is not always enough to stop a process",
+      "body": "As a DevOps engineer, I've had my fair share of experience with Linux signals, and I've learned that they are a crucial aspect of process management.\n\nOne concrete piece of advice I would give is to always use the 'pkill' command with the '-SIGTERM' and '-SIGKILL' options to ensure that a process is properly terminated. For example, 'pkill -SIGTERM myprocess' will send a SIGTERM signal to the process, and if it doesn't respond, 'pkill -SIGKILL myprocess' will send a SIGKILL signal to force-kill it. I've found that using these signals in combination with the 'kill' command has saved me from many late-night debugging sessions.",
+      "hashtags": "#Linux #Signals #DevOps",
+      "image_prompt": "A dark background terminal window with green accent, displaying a Linux signal table, visual type: screenshot, technical elements: terminal, signal table, style: clean and minimal",
+      "word_count": 104,
       "status": "Draft",
-      "generated_at": "2026-05-30T09:24:02.304376+00:00"
+      "generated_at": "2026-06-06T09:29:19.322647+00:00"
     }
   ]
 }
