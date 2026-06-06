@@ -1,141 +1,141 @@
 {
-  "topic": "Kubernetes pod lifecycle and debugging commands",
-  "linkedin_hook": "Master Kubernetes pod management with these essential lifecycle and debugging commands!",
-  "linkedin_intro": "As a DevOps engineer, I've often found myself needing to quickly reference Kubernetes commands to manage and debug pods. This cheatsheet is my go-to resource for streamlining pod lifecycle management and troubleshooting. I've compiled the most useful commands into one place to help you work more efficiently.",
+  "topic": "Kubernetes YAML manifest structure — all key fields",
+  "linkedin_hook": "Mastering Kubernetes YAML manifests just got easier with this ultimate cheatsheet!",
+  "linkedin_intro": "As a senior DevOps engineer, I've worked with numerous Kubernetes deployments and I've compiled a list of essential YAML manifest structures to help you streamline your workflow. This cheatsheet is based on my real-world experience and is designed to be a practical resource for DevOps engineers. Whether you're a beginner or an experienced practitioner, this cheatsheet will help you navigate the complex world of Kubernetes YAML manifests.",
   "sections": [
     {
-      "section_title": "Basic Pod Management",
+      "section_title": "Pods",
       "items": [
         {
-          "command": "kubectl get pods",
-          "description": "Lists all pods in the current namespace"
+          "command": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: example-pod",
+          "description": "Defines a basic pod with the specified name"
         },
         {
-          "command": "kubectl get pods -o wide",
-          "description": "Lists all pods in the current namespace with detailed information"
+          "command": "spec:\n  containers:\n  - name: example-container\n    image: example-image",
+          "description": "Specifies a container with the given name and image"
         },
         {
-          "command": "kubectl describe pod <pod_name>",
-          "description": "Displays detailed information about a specific pod"
+          "command": "ports:\n  - containerPort: 80",
+          "description": "Exposes a port from the container"
         },
         {
-          "command": "kubectl create -f <pod_yaml_file>",
-          "description": "Creates a new pod from a YAML configuration file"
+          "command": "env:\n  - name: EXAMPLE_VAR\n    value: example-value",
+          "description": "Sets an environment variable for the container"
         },
         {
-          "command": "kubectl delete pod <pod_name>",
-          "description": "Deletes a specific pod"
+          "command": "volumeMounts:\n  - name: example-volume\n    mountPath: /example/path",
+          "description": "Mounts a volume to the specified path in the container"
         }
       ]
     },
     {
-      "section_title": "Pod Lifecycle Management",
+      "section_title": "Deployments",
       "items": [
         {
-          "command": "kubectl rollout status deployment/<deployment_name>",
-          "description": "Displays the rollout status of a deployment"
+          "command": "apiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: example-deployment",
+          "description": "Defines a basic deployment with the specified name"
         },
         {
-          "command": "kubectl rollout history deployment/<deployment_name>",
-          "description": "Displays the rollout history of a deployment"
+          "command": "spec:\n  replicas: 3\n  selector:\n    matchLabels:\n      app: example-app",
+          "description": "Specifies the number of replicas and the label selector"
         },
         {
-          "command": "kubectl rollout undo deployment/<deployment_name>",
-          "description": "Undoes the last rollout of a deployment"
+          "command": "template:\n  metadata:\n    labels:\n      app: example-app\n  spec:\n    containers:\n    - name: example-container\n      image: example-image",
+          "description": "Defines the pod template for the deployment"
         },
         {
-          "command": "kubectl scale deployment/<deployment_name> --replicas=<num_replicas>",
-          "description": "Scales the number of replicas of a deployment"
+          "command": "strategy:\n  type: RollingUpdate\n  rollingUpdate:\n    maxSurge: 1\n    maxUnavailable: 0",
+          "description": "Specifies the rolling update strategy for the deployment"
         },
         {
-          "command": "kubectl annotate pod/<pod_name> <key>=<value>",
-          "description": "Adds an annotation to a pod"
+          "command": "minReadySeconds: 5",
+          "description": "Specifies the minimum number of seconds a pod must be ready before it is considered available"
         }
       ]
     },
     {
-      "section_title": "Debugging and Logging",
+      "section_title": "Services",
       "items": [
         {
-          "command": "kubectl logs <pod_name>",
-          "description": "Displays the logs of a pod"
+          "command": "apiVersion: v1\nkind: Service\nmetadata:\n  name: example-service",
+          "description": "Defines a basic service with the specified name"
         },
         {
-          "command": "kubectl logs <pod_name> -c <container_name>",
-          "description": "Displays the logs of a specific container in a pod"
+          "command": "spec:\n  selector:\n    app: example-app\n  ports:\n  - name: http\n    port: 80\n    targetPort: 80",
+          "description": "Specifies the label selector and the port configuration"
         },
         {
-          "command": "kubectl logs -f <pod_name>",
-          "description": "Displays the logs of a pod in real-time"
+          "command": "type: LoadBalancer",
+          "description": "Exposes the service as a load balancer"
         },
         {
-          "command": "kubectl exec -it <pod_name> -- /bin/bash",
-          "description": "Executes a command in a pod and opens a shell session"
+          "command": "loadBalancerIP: 10.0.0.100",
+          "description": "Specifies the IP address of the load balancer"
         },
         {
-          "command": "kubectl debug <pod_name> --image=<debug_image>",
-          "description": "Creates a new pod for debugging with a specified image"
+          "command": "externalTrafficPolicy: Local",
+          "description": "Specifies the external traffic policy for the service"
         }
       ]
     },
     {
-      "section_title": "Networking and Services",
+      "section_title": "Persistent Volumes",
       "items": [
         {
-          "command": "kubectl get svc",
-          "description": "Lists all services in the current namespace"
+          "command": "apiVersion: v1\nkind: PersistentVolume\nmetadata:\n  name: example-pv",
+          "description": "Defines a basic persistent volume with the specified name"
         },
         {
-          "command": "kubectl expose pod/<pod_name> --port=<port_number>",
-          "description": "Exposes a pod as a service"
+          "command": "spec:\n  capacity:\n    storage: 1Gi\n  accessModes:\n    - ReadWriteOnce",
+          "description": "Specifies the capacity and access modes of the persistent volume"
         },
         {
-          "command": "kubectl get endpoints",
-          "description": "Lists all endpoints in the current namespace"
+          "command": "persistentVolumeReclaimPolicy: Retain",
+          "description": "Specifies the reclaim policy for the persistent volume"
         },
         {
-          "command": "kubectl describe svc/<service_name>",
-          "description": "Displays detailed information about a service"
+          "command": "local:\n  path: /example/path",
+          "description": "Specifies the local path for the persistent volume"
         },
         {
-          "command": "kubectl port-forward <pod_name> <local_port>:<pod_port>",
-          "description": "Forwards traffic from a local port to a pod port"
+          "command": "storageClassName: example-storage-class",
+          "description": "Specifies the storage class for the persistent volume"
         }
       ]
     },
     {
-      "section_title": "Persistent Volumes and Storage",
+      "section_title": "ConfigMaps",
       "items": [
         {
-          "command": "kubectl get pv",
-          "description": "Lists all persistent volumes in the current namespace"
+          "command": "apiVersion: v1\nkind: ConfigMap\nmetadata:\n  name: example-config-map",
+          "description": "Defines a basic config map with the specified name"
         },
         {
-          "command": "kubectl get pvc",
-          "description": "Lists all persistent volume claims in the current namespace"
+          "command": "data:\n  example-key: example-value",
+          "description": "Specifies a key-value pair for the config map"
         },
         {
-          "command": "kubectl describe pv/<pv_name>",
-          "description": "Displays detailed information about a persistent volume"
+          "command": "binaryData:\n  example-binary-key: example-binary-value",
+          "description": "Specifies a binary key-value pair for the config map"
         },
         {
-          "command": "kubectl describe pvc/<pvc_name>",
-          "description": "Displays detailed information about a persistent volume claim"
+          "command": "immutable: true",
+          "description": "Specifies that the config map is immutable"
         },
         {
-          "command": "kubectl create -f <storageclass_yaml_file>",
-          "description": "Creates a new storage class from a YAML configuration file"
+          "command": "kubernetes.io/config.map: example-config-map",
+          "description": "Specifies the config map name as a label"
         }
       ]
     }
   ],
   "pro_tips": [
-    "Use 'kubectl get pods -o jsonpath='{.items[0].status.containerStatuses[0].restartCount}'' to get the restart count of the first container in the first pod",
-    "Use 'kubectl rollout restart deployment/<deployment_name>' to restart all pods in a deployment",
-    "Use 'kubectl top pod/<pod_name> --containers' to display resource usage of all containers in a pod",
-    "Use 'kubectl alpha debug <pod_name> --image=<debug_image> --target=<container_name>' to debug a specific container in a pod"
+    "Use the `kubectl explain` command to get detailed information about a specific field in a YAML manifest, for example: `kubectl explain pod.spec.containers`",
+    "Use the `kubectl apply` command with the `--validate` flag to validate a YAML manifest without applying it, for example: `kubectl apply --validate -f example.yaml`",
+    "Use the `kubectl rollout` command to manage rollouts of deployments, for example: `kubectl rollout status deployment/example-deployment`",
+    "Use the `kubectl get` command with the `--output` flag to customize the output format, for example: `kubectl get pods --output=jsonpath='{.items[0].metadata.name}'`"
   ],
-  "linkedin_cta": "What's your go-to Kubernetes command for debugging pods?",
-  "hashtags": "#DevOps #Kubernetes #CloudNative #Containerization #PodManagement",
-  "image_prompt": "Create a professional cheatsheet graphic with a dark background #0d1117, monospace font, and the tool name 'Kubernetes' as the header in cyan #00d4ff. Organize the commands in a grid layout with green #00ff88 command text and white description text. The design should have a clean, minimal aesthetic with no watermark, suitable for a LinkedIn carousel first slide. The grid should have clear sections and subsections with visible borders, and the commands should be grouped by category. The font size should be large enough to be easily readable, and the overall design should be visually appealing and easy to navigate."
+  "linkedin_cta": "What's your favorite Kubernetes YAML manifest trick? Share with me in the comments!",
+  "hashtags": "#Kubernetes #DevOps #YAML #CloudNative",
+  "image_prompt": "Generate a professional cheatsheet graphic with a dark background #0d1117, monospace font, and the tool or technology name 'Kubernetes' as the header in cyan #00d4ff. The graphic should have an organized grid layout showing command blocks with green #00ff88 command text and white description text. The design should be clean and minimal, with no watermark, and suitable for a LinkedIn carousel first slide. The command blocks should be separated by thin white lines, and the header should have a subtle gradient effect to give it a premium look. The overall design should convey a sense of professionalism and expertise in DevOps and Kubernetes."
 }
