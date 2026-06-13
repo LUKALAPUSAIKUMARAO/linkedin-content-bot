@@ -1,141 +1,141 @@
 {
-  "topic": "Kubernetes YAML manifest structure — all key fields",
-  "linkedin_hook": "Mastering Kubernetes YAML manifests just got easier with this ultimate cheatsheet!",
-  "linkedin_intro": "As a senior DevOps engineer, I've worked with numerous Kubernetes deployments and I've compiled a list of essential YAML manifest structures to help you streamline your workflow. This cheatsheet is based on my real-world experience and is designed to be a practical resource for DevOps engineers. Whether you're a beginner or an experienced practitioner, this cheatsheet will help you navigate the complex world of Kubernetes YAML manifests.",
+  "topic": "Kubernetes namespaces — commands and use cases",
+  "linkedin_hook": "Mastering Kubernetes namespaces is crucial for efficient cluster management, and I'm sharing my top commands and use cases to help you get started.",
+  "linkedin_intro": "As a senior DevOps engineer, I've worked with numerous Kubernetes clusters and have learned the importance of proper namespace management. In this cheatsheet, I'll share the most useful commands and configurations I use daily. From basic namespace creation to advanced network policies, I've got you covered.",
   "sections": [
     {
-      "section_title": "Pods",
+      "section_title": "Basic Commands",
       "items": [
         {
-          "command": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: example-pod",
-          "description": "Defines a basic pod with the specified name"
+          "command": "kubectl create namespace <namespace-name>",
+          "description": "Creates a new namespace in the Kubernetes cluster"
         },
         {
-          "command": "spec:\n  containers:\n  - name: example-container\n    image: example-image",
-          "description": "Specifies a container with the given name and image"
+          "command": "kubectl get namespaces",
+          "description": "Lists all namespaces in the Kubernetes cluster"
         },
         {
-          "command": "ports:\n  - containerPort: 80",
-          "description": "Exposes a port from the container"
+          "command": "kubectl describe namespace <namespace-name>",
+          "description": "Displays detailed information about a specific namespace"
         },
         {
-          "command": "env:\n  - name: EXAMPLE_VAR\n    value: example-value",
-          "description": "Sets an environment variable for the container"
+          "command": "kubectl delete namespace <namespace-name>",
+          "description": "Deletes a namespace and all its resources from the Kubernetes cluster"
         },
         {
-          "command": "volumeMounts:\n  - name: example-volume\n    mountPath: /example/path",
-          "description": "Mounts a volume to the specified path in the container"
+          "command": "kubectl config set-context --current --namespace=<namespace-name>",
+          "description": "Sets the current namespace for the Kubernetes context"
         }
       ]
     },
     {
-      "section_title": "Deployments",
+      "section_title": "Namespace Configuration",
       "items": [
         {
-          "command": "apiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: example-deployment",
-          "description": "Defines a basic deployment with the specified name"
+          "command": "kubectl annotate namespace <namespace-name> <key>=<value>",
+          "description": "Adds an annotation to a namespace"
         },
         {
-          "command": "spec:\n  replicas: 3\n  selector:\n    matchLabels:\n      app: example-app",
-          "description": "Specifies the number of replicas and the label selector"
+          "command": "kubectl label namespace <namespace-name> <key>=<value>",
+          "description": "Adds a label to a namespace"
         },
         {
-          "command": "template:\n  metadata:\n    labels:\n      app: example-app\n  spec:\n    containers:\n    - name: example-container\n      image: example-image",
-          "description": "Defines the pod template for the deployment"
+          "command": "kubectl patch namespace <namespace-name> -p '{\"metadata\":{\"annotations\":{\"<key>\":\"<value>\"}}}'",
+          "description": "Patches a namespace with a new annotation"
         },
         {
-          "command": "strategy:\n  type: RollingUpdate\n  rollingUpdate:\n    maxSurge: 1\n    maxUnavailable: 0",
-          "description": "Specifies the rolling update strategy for the deployment"
+          "command": "kubectl patch namespace <namespace-name> -p '{\"metadata\":{\"labels\":{\"<key>\":\"<value>\"}}}'",
+          "description": "Patches a namespace with a new label"
         },
         {
-          "command": "minReadySeconds: 5",
-          "description": "Specifies the minimum number of seconds a pod must be ready before it is considered available"
+          "command": "kubectl apply -f <namespace-config.yaml>",
+          "description": "Applies a namespace configuration from a YAML file"
         }
       ]
     },
     {
-      "section_title": "Services",
+      "section_title": "Resource Management",
       "items": [
         {
-          "command": "apiVersion: v1\nkind: Service\nmetadata:\n  name: example-service",
-          "description": "Defines a basic service with the specified name"
+          "command": "kubectl get pods -n <namespace-name>",
+          "description": "Lists all pods in a specific namespace"
         },
         {
-          "command": "spec:\n  selector:\n    app: example-app\n  ports:\n  - name: http\n    port: 80\n    targetPort: 80",
-          "description": "Specifies the label selector and the port configuration"
+          "command": "kubectl get deployments -n <namespace-name>",
+          "description": "Lists all deployments in a specific namespace"
         },
         {
-          "command": "type: LoadBalancer",
-          "description": "Exposes the service as a load balancer"
+          "command": "kubectl get services -n <namespace-name>",
+          "description": "Lists all services in a specific namespace"
         },
         {
-          "command": "loadBalancerIP: 10.0.0.100",
-          "description": "Specifies the IP address of the load balancer"
+          "command": "kubectl get persistentvolumes -n <namespace-name>",
+          "description": "Lists all persistent volumes in a specific namespace"
         },
         {
-          "command": "externalTrafficPolicy: Local",
-          "description": "Specifies the external traffic policy for the service"
+          "command": "kubectl get persistentvolumeclaims -n <namespace-name>",
+          "description": "Lists all persistent volume claims in a specific namespace"
         }
       ]
     },
     {
-      "section_title": "Persistent Volumes",
+      "section_title": "Network Policies",
       "items": [
         {
-          "command": "apiVersion: v1\nkind: PersistentVolume\nmetadata:\n  name: example-pv",
-          "description": "Defines a basic persistent volume with the specified name"
+          "command": "kubectl create -f <network-policy.yaml>",
+          "description": "Creates a new network policy from a YAML file"
         },
         {
-          "command": "spec:\n  capacity:\n    storage: 1Gi\n  accessModes:\n    - ReadWriteOnce",
-          "description": "Specifies the capacity and access modes of the persistent volume"
+          "command": "kubectl get networkpolicies -n <namespace-name>",
+          "description": "Lists all network policies in a specific namespace"
         },
         {
-          "command": "persistentVolumeReclaimPolicy: Retain",
-          "description": "Specifies the reclaim policy for the persistent volume"
+          "command": "kubectl describe networkpolicy <network-policy-name> -n <namespace-name>",
+          "description": "Displays detailed information about a specific network policy"
         },
         {
-          "command": "local:\n  path: /example/path",
-          "description": "Specifies the local path for the persistent volume"
+          "command": "kubectl delete networkpolicy <network-policy-name> -n <namespace-name>",
+          "description": "Deletes a network policy from a specific namespace"
         },
         {
-          "command": "storageClassName: example-storage-class",
-          "description": "Specifies the storage class for the persistent volume"
+          "command": "kubectl patch networkpolicy <network-policy-name> -n <namespace-name> -p '{\"spec\":{\"ingress\":{\"rules\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"<key>\":\"<value>\"}}}]}]}}}'",
+          "description": "Patches a network policy with a new ingress rule"
         }
       ]
     },
     {
-      "section_title": "ConfigMaps",
+      "section_title": "Security and RBAC",
       "items": [
         {
-          "command": "apiVersion: v1\nkind: ConfigMap\nmetadata:\n  name: example-config-map",
-          "description": "Defines a basic config map with the specified name"
+          "command": "kubectl create role <role-name> --verb=<verb> --resource=<resource> -n <namespace-name>",
+          "description": "Creates a new role in a specific namespace"
         },
         {
-          "command": "data:\n  example-key: example-value",
-          "description": "Specifies a key-value pair for the config map"
+          "command": "kubectl create rolebinding <rolebinding-name> --role=<role-name> --user=<user-name> -n <namespace-name>",
+          "description": "Creates a new role binding in a specific namespace"
         },
         {
-          "command": "binaryData:\n  example-binary-key: example-binary-value",
-          "description": "Specifies a binary key-value pair for the config map"
+          "command": "kubectl get roles -n <namespace-name>",
+          "description": "Lists all roles in a specific namespace"
         },
         {
-          "command": "immutable: true",
-          "description": "Specifies that the config map is immutable"
+          "command": "kubectl get rolebindings -n <namespace-name>",
+          "description": "Lists all role bindings in a specific namespace"
         },
         {
-          "command": "kubernetes.io/config.map: example-config-map",
-          "description": "Specifies the config map name as a label"
+          "command": "kubectl auth can-i <verb> <resource> -n <namespace-name>",
+          "description": "Checks if a user has permission to perform a specific action in a namespace"
         }
       ]
     }
   ],
   "pro_tips": [
-    "Use the `kubectl explain` command to get detailed information about a specific field in a YAML manifest, for example: `kubectl explain pod.spec.containers`",
-    "Use the `kubectl apply` command with the `--validate` flag to validate a YAML manifest without applying it, for example: `kubectl apply --validate -f example.yaml`",
-    "Use the `kubectl rollout` command to manage rollouts of deployments, for example: `kubectl rollout status deployment/example-deployment`",
-    "Use the `kubectl get` command with the `--output` flag to customize the output format, for example: `kubectl get pods --output=jsonpath='{.items[0].metadata.name}'`"
+    "Use the 'kubectl config set-context' command to set the current namespace for your Kubernetes context, and avoid having to specify the namespace for every command.",
+    "Use labels and annotations to organize and filter your namespaces, and make it easier to manage your cluster.",
+    "Use network policies to control traffic flow between pods and services, and improve the security of your cluster.",
+    "Use RBAC to control access to your cluster, and ensure that users and services have the necessary permissions to perform their tasks."
   ],
-  "linkedin_cta": "What's your favorite Kubernetes YAML manifest trick? Share with me in the comments!",
-  "hashtags": "#Kubernetes #DevOps #YAML #CloudNative",
-  "image_prompt": "Generate a professional cheatsheet graphic with a dark background #0d1117, monospace font, and the tool or technology name 'Kubernetes' as the header in cyan #00d4ff. The graphic should have an organized grid layout showing command blocks with green #00ff88 command text and white description text. The design should be clean and minimal, with no watermark, and suitable for a LinkedIn carousel first slide. The command blocks should be separated by thin white lines, and the header should have a subtle gradient effect to give it a premium look. The overall design should convey a sense of professionalism and expertise in DevOps and Kubernetes."
+  "linkedin_cta": "What are your favorite Kubernetes namespace commands and use cases? Share your experiences and tips in the comments below.",
+  "hashtags": "#Kubernetes #DevOps #CloudNative #Containerization #Orchestration",
+  "image_prompt": "Create a professional cheatsheet graphic with a dark background #0d1117, using a monospace font, and featuring the tool name 'Kubernetes' as the header in cyan #00d4ff. Organize the commands into a grid layout with green #00ff88 command text and white description text. Use a clean and minimal design, with no watermarks, and make it suitable for a LinkedIn carousel first slide. The graphic should have a professional DevOps cheatsheet aesthetic, with clear and readable text, and be easy to understand at a glance."
 }

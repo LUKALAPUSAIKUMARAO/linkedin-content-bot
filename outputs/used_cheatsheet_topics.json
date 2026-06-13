@@ -1,5 +1,6 @@
 [
   "kubectl commands every DevOps engineer must know",
   "Kubernetes pod lifecycle and debugging commands",
-  "Kubernetes YAML manifest structure \u2014 all key fields"
+  "Kubernetes YAML manifest structure \u2014 all key fields",
+  "Kubernetes namespaces \u2014 commands and use cases"
 ]
