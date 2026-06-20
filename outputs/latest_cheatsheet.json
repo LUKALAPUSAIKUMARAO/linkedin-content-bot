@@ -1,141 +1,141 @@
 {
-  "topic": "Kubernetes namespaces — commands and use cases",
-  "linkedin_hook": "Mastering Kubernetes namespaces is crucial for efficient cluster management, and I'm sharing my top commands and use cases to help you get started.",
-  "linkedin_intro": "As a senior DevOps engineer, I've worked with numerous Kubernetes clusters and have learned the importance of proper namespace management. In this cheatsheet, I'll share the most useful commands and configurations I use daily. From basic namespace creation to advanced network policies, I've got you covered.",
+  "topic": "Kubernetes services — ClusterIP, NodePort, LoadBalancer reference",
+  "linkedin_hook": "Mastering Kubernetes services is crucial for any DevOps engineer, and I'm sharing my go-to cheatsheet to help you deploy like a pro!",
+  "linkedin_intro": "As a senior DevOps engineer, I've worked with numerous Kubernetes clusters and services. I've compiled a comprehensive cheatsheet to help my fellow engineers navigate the complexities of ClusterIP, NodePort, and LoadBalancer services. This cheatsheet is based on my real-world experience and is designed to be a practical reference guide.",
   "sections": [
     {
-      "section_title": "Basic Commands",
+      "section_title": "ClusterIP Services",
       "items": [
         {
-          "command": "kubectl create namespace <namespace-name>",
-          "description": "Creates a new namespace in the Kubernetes cluster"
+          "command": "kubectl expose deployment/nginx --type=ClusterIP --port=80",
+          "description": "Exposes a deployment as a ClusterIP service on port 80"
         },
         {
-          "command": "kubectl get namespaces",
-          "description": "Lists all namespaces in the Kubernetes cluster"
+          "command": "kubectl get svc -o wide",
+          "description": "Lists all services in the current namespace with detailed information"
         },
         {
-          "command": "kubectl describe namespace <namespace-name>",
-          "description": "Displays detailed information about a specific namespace"
+          "command": "kubectl describe svc/nginx",
+          "description": "Displays detailed information about a specific service"
         },
         {
-          "command": "kubectl delete namespace <namespace-name>",
-          "description": "Deletes a namespace and all its resources from the Kubernetes cluster"
+          "command": "kubectl edit svc/nginx",
+          "description": "Edits a service using the default editor"
         },
         {
-          "command": "kubectl config set-context --current --namespace=<namespace-name>",
-          "description": "Sets the current namespace for the Kubernetes context"
+          "command": "kubectl delete svc/nginx",
+          "description": "Deletes a service"
         }
       ]
     },
     {
-      "section_title": "Namespace Configuration",
+      "section_title": "NodePort Services",
       "items": [
         {
-          "command": "kubectl annotate namespace <namespace-name> <key>=<value>",
-          "description": "Adds an annotation to a namespace"
+          "command": "kubectl expose deployment/nginx --type=NodePort --port=80",
+          "description": "Exposes a deployment as a NodePort service on port 80"
         },
         {
-          "command": "kubectl label namespace <namespace-name> <key>=<value>",
-          "description": "Adds a label to a namespace"
+          "command": "kubectl get svc -o jsonpath='{.items[0].spec.ports[0].nodePort}'",
+          "description": "Retrieves the node port of a service"
         },
         {
-          "command": "kubectl patch namespace <namespace-name> -p '{\"metadata\":{\"annotations\":{\"<key>\":\"<value>\"}}}'",
-          "description": "Patches a namespace with a new annotation"
+          "command": "kubectl patch svc/nginx -p='{\"spec\":{\"type\":\"NodePort\",\"ports\":[{\"port\":80,\"nodePort\":30080}]}}'",
+          "description": "Updates a service to use a specific node port"
         },
         {
-          "command": "kubectl patch namespace <namespace-name> -p '{\"metadata\":{\"labels\":{\"<key>\":\"<value>\"}}}'",
-          "description": "Patches a namespace with a new label"
+          "command": "kubectl get nodes -o jsonpath='{.items[0].status.addresses[0].address}'",
+          "description": "Retrieves the IP address of a node"
         },
         {
-          "command": "kubectl apply -f <namespace-config.yaml>",
-          "description": "Applies a namespace configuration from a YAML file"
+          "command": "kubectl get svc/nginx -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'",
+          "description": "Retrieves the hostname of a load balancer"
         }
       ]
     },
     {
-      "section_title": "Resource Management",
+      "section_title": "LoadBalancer Services",
       "items": [
         {
-          "command": "kubectl get pods -n <namespace-name>",
-          "description": "Lists all pods in a specific namespace"
+          "command": "kubectl expose deployment/nginx --type=LoadBalancer --port=80",
+          "description": "Exposes a deployment as a LoadBalancer service on port 80"
         },
         {
-          "command": "kubectl get deployments -n <namespace-name>",
-          "description": "Lists all deployments in a specific namespace"
+          "command": "kubectl get svc -o jsonpath='{.items[0].status.loadBalancer.ingress[0].hostname}'",
+          "description": "Retrieves the hostname of a load balancer"
         },
         {
-          "command": "kubectl get services -n <namespace-name>",
-          "description": "Lists all services in a specific namespace"
+          "command": "kubectl get svc -o jsonpath='{.items[0].status.loadBalancer.ingress[0].ip}'",
+          "description": "Retrieves the IP address of a load balancer"
         },
         {
-          "command": "kubectl get persistentvolumes -n <namespace-name>",
-          "description": "Lists all persistent volumes in a specific namespace"
+          "command": "kubectl annotate svc/nginx load-balancer.kubernetes.io/internal=true",
+          "description": "Configures a load balancer to be internal"
         },
         {
-          "command": "kubectl get persistentvolumeclaims -n <namespace-name>",
-          "description": "Lists all persistent volume claims in a specific namespace"
+          "command": "kubectl patch svc/nginx -p='{\"spec\":{\"type\":\"LoadBalancer\",\"ports\":[{\"port\":80,\"targetPort\":80}]}}'",
+          "description": "Updates a service to use a specific target port"
         }
       ]
     },
     {
-      "section_title": "Network Policies",
+      "section_title": "Service Networking",
       "items": [
         {
-          "command": "kubectl create -f <network-policy.yaml>",
-          "description": "Creates a new network policy from a YAML file"
+          "command": "kubectl get ep",
+          "description": "Lists all endpoints in the current namespace"
         },
         {
-          "command": "kubectl get networkpolicies -n <namespace-name>",
-          "description": "Lists all network policies in a specific namespace"
+          "command": "kubectl get pod -o wide",
+          "description": "Lists all pods in the current namespace with detailed information"
         },
         {
-          "command": "kubectl describe networkpolicy <network-policy-name> -n <namespace-name>",
-          "description": "Displays detailed information about a specific network policy"
+          "command": "kubectl get svc -o jsonpath='{.items[0].spec.clusterIP}'",
+          "description": "Retrieves the cluster IP of a service"
         },
         {
-          "command": "kubectl delete networkpolicy <network-policy-name> -n <namespace-name>",
-          "description": "Deletes a network policy from a specific namespace"
+          "command": "kubectl get svc -o jsonpath='{.items[0].spec.externalTrafficPolicy}'",
+          "description": "Retrieves the external traffic policy of a service"
         },
         {
-          "command": "kubectl patch networkpolicy <network-policy-name> -n <namespace-name> -p '{\"spec\":{\"ingress\":{\"rules\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"<key>\":\"<value>\"}}}]}]}}}'",
-          "description": "Patches a network policy with a new ingress rule"
+          "command": "kubectl patch svc/nginx -p='{\"spec\":{\"externalTrafficPolicy\":\"Local\"}}'",
+          "description": "Updates a service to use a local external traffic policy"
         }
       ]
     },
     {
-      "section_title": "Security and RBAC",
+      "section_title": "Troubleshooting",
       "items": [
         {
-          "command": "kubectl create role <role-name> --verb=<verb> --resource=<resource> -n <namespace-name>",
-          "description": "Creates a new role in a specific namespace"
+          "command": "kubectl get svc -o wide",
+          "description": "Lists all services in the current namespace with detailed information"
         },
         {
-          "command": "kubectl create rolebinding <rolebinding-name> --role=<role-name> --user=<user-name> -n <namespace-name>",
-          "description": "Creates a new role binding in a specific namespace"
+          "command": "kubectl describe svc/nginx",
+          "description": "Displays detailed information about a specific service"
         },
         {
-          "command": "kubectl get roles -n <namespace-name>",
-          "description": "Lists all roles in a specific namespace"
+          "command": "kubectl get ep",
+          "description": "Lists all endpoints in the current namespace"
         },
         {
-          "command": "kubectl get rolebindings -n <namespace-name>",
-          "description": "Lists all role bindings in a specific namespace"
+          "command": "kubectl get pod -o wide",
+          "description": "Lists all pods in the current namespace with detailed information"
         },
         {
-          "command": "kubectl auth can-i <verb> <resource> -n <namespace-name>",
-          "description": "Checks if a user has permission to perform a specific action in a namespace"
+          "command": "kubectl logs -f nginx",
+          "description": "Displays the logs of a pod"
         }
       ]
     }
   ],
   "pro_tips": [
-    "Use the 'kubectl config set-context' command to set the current namespace for your Kubernetes context, and avoid having to specify the namespace for every command.",
-    "Use labels and annotations to organize and filter your namespaces, and make it easier to manage your cluster.",
-    "Use network policies to control traffic flow between pods and services, and improve the security of your cluster.",
-    "Use RBAC to control access to your cluster, and ensure that users and services have the necessary permissions to perform their tasks."
+    "Use kubectl get svc -o wide to quickly identify the type and ports of your services\nand use kubectl describe svc/nginx to get detailed information about a specific service.",
+    "Use kubectl patch svc/nginx -p='{\"spec\":{\"type\":\"LoadBalancer\"}}' to update a service to use a load balancer\nand use kubectl get svc -o jsonpath='{.items[0].status.loadBalancer.ingress[0].hostname}' to retrieve the hostname of the load balancer.",
+    "Use kubectl annotate svc/nginx load-balancer.kubernetes.io/internal=true to configure a load balancer to be internal\nand use kubectl get svc -o jsonpath='{.items[0].spec.externalTrafficPolicy}' to retrieve the external traffic policy of a service.",
+    "Use kubectl get ep to list all endpoints in the current namespace\nand use kubectl get pod -o wide to list all pods in the current namespace with detailed information."
   ],
-  "linkedin_cta": "What are your favorite Kubernetes namespace commands and use cases? Share your experiences and tips in the comments below.",
-  "hashtags": "#Kubernetes #DevOps #CloudNative #Containerization #Orchestration",
-  "image_prompt": "Create a professional cheatsheet graphic with a dark background #0d1117, using a monospace font, and featuring the tool name 'Kubernetes' as the header in cyan #00d4ff. Organize the commands into a grid layout with green #00ff88 command text and white description text. Use a clean and minimal design, with no watermarks, and make it suitable for a LinkedIn carousel first slide. The graphic should have a professional DevOps cheatsheet aesthetic, with clear and readable text, and be easy to understand at a glance."
+  "linkedin_cta": "What's your go-to Kubernetes service type and why? Share your experience in the comments below!",
+  "hashtags": "#Kubernetes #DevOps #CloudNative #Containerization #LoadBalancing",
+  "image_prompt": "Generate a professional cheatsheet graphic with a dark background #0d1117, monospace font, and the tool or technology name 'Kubernetes' as the header in cyan #00d4ff. Organize the commands into a grid layout with green #00ff88 command text and white description text. Use a clean and minimal design with no watermark, suitable for a LinkedIn carousel first slide. The graphic should be easy to read and understand, with clear headings and concise descriptions. Include the following sections: ClusterIP Services, NodePort Services, LoadBalancer Services, Service Networking, and Troubleshooting. Each section should have at least 5 commands with descriptions. The graphic should be visually appealing and professional, with a focus on showcasing the commands and descriptions in a clear and organized manner."
 }
