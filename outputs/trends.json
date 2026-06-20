@@ -1,14 +1,11 @@
 {
-  "fetched_at": "2026-06-13T10:05:07.592425",
+  "fetched_at": "2026-06-20T10:11:09.855763",
   "trends": [
-    "A key remapping daemon for Linux",
-    "Enigma's Echo \u2014 AI-Powered Cryptanalysis Console (Bletchley Park)",
-    "The Real AI Coding Breakthrough Is Not More Context. It Is Better Diagnostics.",
-    "I Audited an AI Chatbot's Sandbox Like a Black-Box Linux Machine",
-    "Kubernetes vs Docker, PaaS, and Traditional Deployment Tools for AI Apps",
-    "Refactoring Terraform: From One File to Modules",
-    "Claude Code TDD: Force Red-Green-Refactor with Hooks & CLAUDE.md (2026)",
-    "Auto-verifying your AI-SRE's fixes against your real cluster, with mirrord",
-    "Stop Guessing, Start Profiling: A Dev's Guide to Go Mechanics"
+    "The Winner of the AI-Pocalypse? The Full-Stack Generalist (But Probably Later Instead of Sooner)",
+    "The $0 Bug That Cost Us $1,800 in API Calls",
+    "How to Properly Set Up K3s on Your Homelab or Server (2026 Edition)",
+    "ChromaDB Helm values.yaml: the 2026 production setup",
+    "Building a Production-Grade 3-Tier AWS Architecture with Terraform: Design Decisions, Trade-offs, and Lessons Learned",
+    "Hardening Azure Acmebot for ISO 27001 & NIS2 Compliance"
   ]
 }
