@@ -1,11 +1,15 @@
 {
-  "fetched_at": "2026-06-20T10:11:09.855763",
+  "fetched_at": "2026-06-27T09:31:41.469046",
   "trends": [
-    "The Winner of the AI-Pocalypse? The Full-Stack Generalist (But Probably Later Instead of Sooner)",
-    "The $0 Bug That Cost Us $1,800 in API Calls",
-    "How to Properly Set Up K3s on Your Homelab or Server (2026 Edition)",
-    "ChromaDB Helm values.yaml: the 2026 production setup",
-    "Building a Production-Grade 3-Tier AWS Architecture with Terraform: Design Decisions, Trade-offs, and Lessons Learned",
-    "Hardening Azure Acmebot for ISO 27001 & NIS2 Compliance"
+    "Linux on Older Hardware: The Complete Revival Guide",
+    "Slisp: Simple Lisp compiler (Linux/amd64)",
+    "Too cheap to be good? Think again.",
+    "The Stale Feature Flag We Deleted That Turned a Feature Back On",
+    "DNS is weird inside k8s on AWS",
+    "Auto-verifying your AI-SRE's fixes (Part II): HolmesGPT end-to-end on a real cluster",
+    "The Bucket That Must Exist Before Everything Else",
+    "My Firewall Had 77 Rules. Terraform Knew About 22 of Them.",
+    "How an AI Terminal Assistant Became My Team's Most Productive Engineer - Opencode + Claude + MCP",
+    "Humanizing Artificial Intelligence for SRE Teams: Reducing Alert Fatigue With Smarter AI Guidance"
   ]
 }
