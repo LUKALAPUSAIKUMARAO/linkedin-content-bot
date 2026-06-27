@@ -3,5 +3,6 @@
   "Kubernetes pod lifecycle and debugging commands",
   "Kubernetes YAML manifest structure \u2014 all key fields",
   "Kubernetes namespaces \u2014 commands and use cases",
-  "Kubernetes services \u2014 ClusterIP, NodePort, LoadBalancer reference"
+  "Kubernetes services \u2014 ClusterIP, NodePort, LoadBalancer reference",
+  "Kubernetes ConfigMaps and Secrets \u2014 create and consume reference"
 ]

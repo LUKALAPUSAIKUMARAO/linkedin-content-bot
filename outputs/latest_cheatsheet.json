@@ -1,141 +1,141 @@
 {
-  "topic": "Kubernetes services — ClusterIP, NodePort, LoadBalancer reference",
-  "linkedin_hook": "Mastering Kubernetes services is crucial for any DevOps engineer, and I'm sharing my go-to cheatsheet to help you deploy like a pro!",
-  "linkedin_intro": "As a senior DevOps engineer, I've worked with numerous Kubernetes clusters and services. I've compiled a comprehensive cheatsheet to help my fellow engineers navigate the complexities of ClusterIP, NodePort, and LoadBalancer services. This cheatsheet is based on my real-world experience and is designed to be a practical reference guide.",
+  "topic": "Kubernetes ConfigMaps and Secrets — create and consume reference",
+  "linkedin_hook": "Master Kubernetes configuration management with this essential ConfigMaps and Secrets cheatsheet!",
+  "linkedin_intro": "As a DevOps engineer, I've worked with numerous teams to deploy and manage applications on Kubernetes. One common challenge we face is managing configuration data and sensitive information. To help you overcome this, I've put together a comprehensive cheatsheet on Kubernetes ConfigMaps and Secrets. This reference guide covers everything from basic commands to advanced techniques for creating and consuming configuration data in your Kubernetes clusters.",
   "sections": [
     {
-      "section_title": "ClusterIP Services",
+      "section_title": "Basic ConfigMap Commands",
       "items": [
         {
-          "command": "kubectl expose deployment/nginx --type=ClusterIP --port=80",
-          "description": "Exposes a deployment as a ClusterIP service on port 80"
+          "command": "kubectl create configmap my-config --from-literal=key1=value1 --from-literal=key2=value2",
+          "description": "Create a new ConfigMap named my-config with literal key-value pairs"
         },
         {
-          "command": "kubectl get svc -o wide",
-          "description": "Lists all services in the current namespace with detailed information"
+          "command": "kubectl get configmaps",
+          "description": "List all ConfigMaps in the current namespace"
         },
         {
-          "command": "kubectl describe svc/nginx",
-          "description": "Displays detailed information about a specific service"
+          "command": "kubectl describe configmap my-config",
+          "description": "Display detailed information about the my-config ConfigMap"
         },
         {
-          "command": "kubectl edit svc/nginx",
-          "description": "Edits a service using the default editor"
+          "command": "kubectl edit configmap my-config",
+          "description": "Edit the my-config ConfigMap using the default editor"
         },
         {
-          "command": "kubectl delete svc/nginx",
-          "description": "Deletes a service"
+          "command": "kubectl delete configmap my-config",
+          "description": "Delete the my-config ConfigMap"
         }
       ]
     },
     {
-      "section_title": "NodePort Services",
+      "section_title": "ConfigMap File Management",
       "items": [
         {
-          "command": "kubectl expose deployment/nginx --type=NodePort --port=80",
-          "description": "Exposes a deployment as a NodePort service on port 80"
+          "command": "kubectl create configmap my-config --from-file=config.properties",
+          "description": "Create a new ConfigMap named my-config from a file named config.properties"
         },
         {
-          "command": "kubectl get svc -o jsonpath='{.items[0].spec.ports[0].nodePort}'",
-          "description": "Retrieves the node port of a service"
+          "command": "kubectl create configmap my-config --from-file=key1=/path/to/file1 --from-file=key2=/path/to/file2",
+          "description": "Create a new ConfigMap named my-config from multiple files"
         },
         {
-          "command": "kubectl patch svc/nginx -p='{\"spec\":{\"type\":\"NodePort\",\"ports\":[{\"port\":80,\"nodePort\":30080}]}}'",
-          "description": "Updates a service to use a specific node port"
+          "command": "kubectl get configmap my-config -o yaml",
+          "description": "Display the my-config ConfigMap in YAML format"
         },
         {
-          "command": "kubectl get nodes -o jsonpath='{.items[0].status.addresses[0].address}'",
-          "description": "Retrieves the IP address of a node"
+          "command": "kubectl get configmap my-config -o json",
+          "description": "Display the my-config ConfigMap in JSON format"
         },
         {
-          "command": "kubectl get svc/nginx -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'",
-          "description": "Retrieves the hostname of a load balancer"
+          "command": "kubectl create configmap my-config --from-env-file=.env",
+          "description": "Create a new ConfigMap named my-config from a .env file"
         }
       ]
     },
     {
-      "section_title": "LoadBalancer Services",
+      "section_title": "Basic Secret Commands",
       "items": [
         {
-          "command": "kubectl expose deployment/nginx --type=LoadBalancer --port=80",
-          "description": "Exposes a deployment as a LoadBalancer service on port 80"
+          "command": "kubectl create secret generic my-secret --from-literal=key1=value1 --from-literal=key2=value2",
+          "description": "Create a new Secret named my-secret with literal key-value pairs"
         },
         {
-          "command": "kubectl get svc -o jsonpath='{.items[0].status.loadBalancer.ingress[0].hostname}'",
-          "description": "Retrieves the hostname of a load balancer"
+          "command": "kubectl get secrets",
+          "description": "List all Secrets in the current namespace"
         },
         {
-          "command": "kubectl get svc -o jsonpath='{.items[0].status.loadBalancer.ingress[0].ip}'",
-          "description": "Retrieves the IP address of a load balancer"
+          "command": "kubectl describe secret my-secret",
+          "description": "Display detailed information about the my-secret Secret"
         },
         {
-          "command": "kubectl annotate svc/nginx load-balancer.kubernetes.io/internal=true",
-          "description": "Configures a load balancer to be internal"
+          "command": "kubectl edit secret my-secret",
+          "description": "Edit the my-secret Secret using the default editor"
         },
         {
-          "command": "kubectl patch svc/nginx -p='{\"spec\":{\"type\":\"LoadBalancer\",\"ports\":[{\"port\":80,\"targetPort\":80}]}}'",
-          "description": "Updates a service to use a specific target port"
+          "command": "kubectl delete secret my-secret",
+          "description": "Delete the my-secret Secret"
         }
       ]
     },
     {
-      "section_title": "Service Networking",
+      "section_title": "Secret File Management",
       "items": [
         {
-          "command": "kubectl get ep",
-          "description": "Lists all endpoints in the current namespace"
+          "command": "kubectl create secret generic my-secret --from-file=key1=/path/to/file1 --from-file=key2=/path/to/file2",
+          "description": "Create a new Secret named my-secret from multiple files"
         },
         {
-          "command": "kubectl get pod -o wide",
-          "description": "Lists all pods in the current namespace with detailed information"
+          "command": "kubectl create secret tls my-secret --key tls.key --cert tls.crt",
+          "description": "Create a new TLS Secret named my-secret from a key and certificate file"
         },
         {
-          "command": "kubectl get svc -o jsonpath='{.items[0].spec.clusterIP}'",
-          "description": "Retrieves the cluster IP of a service"
+          "command": "kubectl get secret my-secret -o yaml",
+          "description": "Display the my-secret Secret in YAML format"
         },
         {
-          "command": "kubectl get svc -o jsonpath='{.items[0].spec.externalTrafficPolicy}'",
-          "description": "Retrieves the external traffic policy of a service"
+          "command": "kubectl get secret my-secret -o json",
+          "description": "Display the my-secret Secret in JSON format"
         },
         {
-          "command": "kubectl patch svc/nginx -p='{\"spec\":{\"externalTrafficPolicy\":\"Local\"}}'",
-          "description": "Updates a service to use a local external traffic policy"
+          "command": "kubectl create secret docker-registry my-secret --docker-username=myuser --docker-password=mypassword --docker-email=myemail",
+          "description": "Create a new Docker registry Secret named my-secret"
         }
       ]
     },
     {
-      "section_title": "Troubleshooting",
+      "section_title": "Consuming ConfigMaps and Secrets in Pods",
       "items": [
         {
-          "command": "kubectl get svc -o wide",
-          "description": "Lists all services in the current namespace with detailed information"
+          "command": "kubectl create deployment my-deployment --image=nginx --env=configmap/my-config",
+          "description": "Create a new Deployment named my-deployment with environment variables from a ConfigMap"
         },
         {
-          "command": "kubectl describe svc/nginx",
-          "description": "Displays detailed information about a specific service"
+          "command": "kubectl create deployment my-deployment --image=nginx --volume-mounts=configmap/my-config:/etc/config",
+          "description": "Create a new Deployment named my-deployment with a volume mount from a ConfigMap"
         },
         {
-          "command": "kubectl get ep",
-          "description": "Lists all endpoints in the current namespace"
+          "command": "kubectl create deployment my-deployment --image=nginx --env=secret/my-secret",
+          "description": "Create a new Deployment named my-deployment with environment variables from a Secret"
         },
         {
-          "command": "kubectl get pod -o wide",
-          "description": "Lists all pods in the current namespace with detailed information"
+          "command": "kubectl create deployment my-deployment --image=nginx --volume-mounts=secret/my-secret:/etc/secret",
+          "description": "Create a new Deployment named my-deployment with a volume mount from a Secret"
         },
         {
-          "command": "kubectl logs -f nginx",
-          "description": "Displays the logs of a pod"
+          "command": "kubectl create deployment my-deployment --image=nginx --volume-mounts=configmap/my-config:/etc/config --volume-mounts=secret/my-secret:/etc/secret",
+          "description": "Create a new Deployment named my-deployment with volume mounts from both a ConfigMap and a Secret"
         }
       ]
     }
   ],
   "pro_tips": [
-    "Use kubectl get svc -o wide to quickly identify the type and ports of your services\nand use kubectl describe svc/nginx to get detailed information about a specific service.",
-    "Use kubectl patch svc/nginx -p='{\"spec\":{\"type\":\"LoadBalancer\"}}' to update a service to use a load balancer\nand use kubectl get svc -o jsonpath='{.items[0].status.loadBalancer.ingress[0].hostname}' to retrieve the hostname of the load balancer.",
-    "Use kubectl annotate svc/nginx load-balancer.kubernetes.io/internal=true to configure a load balancer to be internal\nand use kubectl get svc -o jsonpath='{.items[0].spec.externalTrafficPolicy}' to retrieve the external traffic policy of a service.",
-    "Use kubectl get ep to list all endpoints in the current namespace\nand use kubectl get pod -o wide to list all pods in the current namespace with detailed information."
+    "Use kubectl create configmap --from-file to create ConfigMaps from existing configuration files, and kubectl create secret generic --from-file to create Secrets from existing sensitive data files.",
+    "Utilize kubectl patch to update ConfigMaps and Secrets without having to recreate them, for example: kubectl patch configmap my-config -p='{\"data\":{\"key1\":\"new-value\"}}'",
+    "Leverage kubectl rollout to manage the rollout of new ConfigMaps and Secrets to your Deployments, for example: kubectl rollout restart deployment my-deployment --env=configmap/my-config",
+    "Use kubectl config set-context to set the default context for your kubectl commands, ensuring you're always working with the correct cluster and namespace."
   ],
-  "linkedin_cta": "What's your go-to Kubernetes service type and why? Share your experience in the comments below!",
-  "hashtags": "#Kubernetes #DevOps #CloudNative #Containerization #LoadBalancing",
-  "image_prompt": "Generate a professional cheatsheet graphic with a dark background #0d1117, monospace font, and the tool or technology name 'Kubernetes' as the header in cyan #00d4ff. Organize the commands into a grid layout with green #00ff88 command text and white description text. Use a clean and minimal design with no watermark, suitable for a LinkedIn carousel first slide. The graphic should be easy to read and understand, with clear headings and concise descriptions. Include the following sections: ClusterIP Services, NodePort Services, LoadBalancer Services, Service Networking, and Troubleshooting. Each section should have at least 5 commands with descriptions. The graphic should be visually appealing and professional, with a focus on showcasing the commands and descriptions in a clear and organized manner."
+  "linkedin_cta": "What are your favorite tips and tricks for managing ConfigMaps and Secrets in Kubernetes? Share your expertise in the comments below!",
+  "hashtags": "#Kubernetes #ConfigMaps #Secrets #DevOps #CloudNative",
+  "image_prompt": "Generate a professional cheatsheet graphic with a dark background #0d1117, using a monospace font, and featuring the tool name 'Kubernetes ConfigMaps and Secrets' as the header in cyan #00d4ff. Organize the commands into a grid layout with green #00ff88 command text and white description text. Incorporate a clean, minimal design with plenty of whitespace, and avoid watermarks. The graphic should be suitable for a LinkedIn carousel first slide, with a width of 1080 pixels and a height of 1350 pixels. Ensure the design is professional, modern, and easy to read, making it perfect for DevOps engineers to quickly reference and share."
 }
