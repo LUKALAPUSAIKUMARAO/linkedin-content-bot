@@ -1,15 +1,14 @@
 {
-  "fetched_at": "2026-06-27T09:31:41.469046",
+  "fetched_at": "2026-07-04T09:26:39.739849",
   "trends": [
-    "Linux on Older Hardware: The Complete Revival Guide",
-    "Slisp: Simple Lisp compiler (Linux/amd64)",
-    "Too cheap to be good? Think again.",
-    "The Stale Feature Flag We Deleted That Turned a Feature Back On",
-    "DNS is weird inside k8s on AWS",
-    "Auto-verifying your AI-SRE's fixes (Part II): HolmesGPT end-to-end on a real cluster",
-    "The Bucket That Must Exist Before Everything Else",
-    "My Firewall Had 77 Rules. Terraform Knew About 22 of Them.",
-    "How an AI Terminal Assistant Became My Team's Most Productive Engineer - Opencode + Claude + MCP",
-    "Humanizing Artificial Intelligence for SRE Teams: Reducing Alert Fatigue With Smarter AI Guidance"
+    "Show HN: A statically typed, cross-platform, easily bootstrappable build system",
+    "Protect Yourself, Mesh Yourself",
+    "Building an uptime monitor in Rust: one binary, two databases, 130K checks/sec per core",
+    "Agnostic Cluster Refactor Skill for Antigrafity CLI: Building an AI Agent that Migrates Apps from AWS to GKE (Subagents, HITL Gate & Workload Identity)",
+    "How Prathyusha Ramanjaneyulu at Celonis Eliminated Dev Environment Overhead for 600 Engineers",
+    "I built an open-source Terraform drift scanner in 2 days, before starting college",
+    "[Databricks on AWS #2] RBAC on Databricks: Function-Role Groups, Workspace Assignment, and Why USER/ADMIN Isn't the Whole Story",
+    "GPUs Demystified: What Every Developer Needs to Know in the AI Era",
+    "Your \"DevOps Team\" Is the Silo DevOps Was Supposed to Kill"
   ]
 }
