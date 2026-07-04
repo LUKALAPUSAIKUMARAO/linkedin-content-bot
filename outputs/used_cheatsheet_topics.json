@@ -4,5 +4,6 @@
   "Kubernetes YAML manifest structure \u2014 all key fields",
   "Kubernetes namespaces \u2014 commands and use cases",
   "Kubernetes services \u2014 ClusterIP, NodePort, LoadBalancer reference",
-  "Kubernetes ConfigMaps and Secrets \u2014 create and consume reference"
+  "Kubernetes ConfigMaps and Secrets \u2014 create and consume reference",
+  "Kubernetes resource requests and limits \u2014 syntax and examples"
 ]
