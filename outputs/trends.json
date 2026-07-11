@@ -1,14 +1,14 @@
 {
-  "fetched_at": "2026-07-04T09:26:39.739849",
+  "fetched_at": "2026-07-11T08:51:00.339732",
   "trends": [
-    "Show HN: A statically typed, cross-platform, easily bootstrappable build system",
-    "Protect Yourself, Mesh Yourself",
-    "Building an uptime monitor in Rust: one binary, two databases, 130K checks/sec per core",
-    "Agnostic Cluster Refactor Skill for Antigrafity CLI: Building an AI Agent that Migrates Apps from AWS to GKE (Subagents, HITL Gate & Workload Identity)",
-    "How Prathyusha Ramanjaneyulu at Celonis Eliminated Dev Environment Overhead for 600 Engineers",
-    "I built an open-source Terraform drift scanner in 2 days, before starting college",
-    "[Databricks on AWS #2] RBAC on Databricks: Function-Role Groups, Workspace Assignment, and Why USER/ADMIN Isn't the Whole Story",
-    "GPUs Demystified: What Every Developer Needs to Know in the AI Era",
-    "Your \"DevOps Team\" Is the Silo DevOps Was Supposed to Kill"
+    "GhostLock, a stack-UAF that has existed in ALL Linux distributions for 15 years",
+    "I Deleted 200 Lines of Code I Didn't Write and Learned More Than When I Wrote It...",
+    "What's All Am I Hosting? Full Infrastructure Breakdown",
+    "The Agent That Knows When Not to Act \u2014 Building NeuroScale Autopilot on Qwen Cloud",
+    "Your Kubernetes Controller Is Silently Dead and Nobody Knows",
+    "Your Infrastructure Has Bugs Too: Scanning Terraform with Checkov (IaC SAST)",
+    "I Built My First AWS Network with Terraform. Here's Everything That Went Wrong.",
+    "Debugging Containers From the Terminal: A Practical Docker CLI Workflow",
+    "Why Your Microservices Need Circuit Breakers (And How to Add Them)"
   ]
 }

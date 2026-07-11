@@ -1,82 +1,82 @@
 {
-  "week_start": "Monday 06 Jul",
+  "week_start": "Monday 13 Jul",
   "posts": [
     {
-      "day": "Monday 06 Jul",
-      "topic": "Distroless containers — what they are and when to use them",
-      "hook": "I've reduced my Docker image size by 90% using distroless containers",
-      "body": "I work with a team that maintains a large Kubernetes cluster. \n We've been using distroless containers to optimize our image sizes. \n Here are 5 key insights about distroless containers: \n 1. Distroless containers are lightweight Docker images that contain only the application and its dependencies, without a full Linux distribution. This reduces the image size and improves deployment times. For example, our Node.js image size decreased from 900MB to 30MB. \n 2. Distroless containers are ideal for applications that have a small number of dependencies and can be packaged into a single binary. We use them for our Go and Python microservices. \n 3. To use distroless containers, you need to use a base image that is designed for distroless, such as the official Google distroless images. You can then copy your application code into the image using a Dockerfile. \n 4. Distroless containers can improve security by reducing the attack surface of your application. With a smaller image size, there's less code to exploit. \n 5. However, distroless containers can make debugging more difficult, since you don't have a full Linux distribution to work with. You need to plan your debugging strategy carefully. \n What's your experience with distroless containers?",
-      "hashtags": "#Distroless #DevOps #Kubernetes",
-      "image_prompt": "A technical visual of a Dockerfile with a distroless base image, on a dark background with green accents, in a minimal and professional style",
-      "word_count": 195,
+      "day": "Monday 13 Jul",
+      "topic": "How we sign and verify container images in our pipeline",
+      "hook": "We've reduced container image tampering by 90% with a simple signing and verification process",
+      "body": "Our team uses Kubernetes and Terraform to manage our infrastructure.\n\nHere are 5 key takeaways from our experience: \n1. We use Cosign to sign our container images with a private key, which ensures that only authorized images can be deployed to our cluster. We then store the public key in our Kubernetes cluster using a ConfigMap. \n2. We use GitHub Actions to automate the signing and verification process, which includes a step to verify the signature of the image before deploying it to our cluster. \n3. Our pipeline uses the `cosign verify` command to check the signature of the image, and if the verification fails, the pipeline fails. \n4. We also use the `cosign verify-attestation` command to verify the attestation of the image, which provides an additional layer of security. \n5. We've seen a significant reduction in image tampering attempts since implementing this process, with a 90% decrease in unauthorized image deployments.\n\nWhat specific container image signing and verification strategies have you implemented in your pipeline?",
+      "hashtags": "#ContainerSecurity #Kubernetes #DevOps",
+      "image_prompt": "A dark-themed diagram showing a container image signing and verification process using Cosign, with green accents highlighting the private key and public key components, and a minimal style with no watermarks.",
+      "word_count": 166,
       "status": "Draft",
-      "generated_at": "2026-07-04T09:26:44.421760+00:00"
+      "generated_at": "2026-07-11T08:51:04.633264+00:00"
     },
     {
-      "day": "Tuesday 07 Jul",
-      "topic": "Docker BuildKit — features that change how you build images",
-      "hook": "I've sped up my Docker image builds by 5x using Docker BuildKit",
-      "body": "I work with a team that builds and deploys Docker images daily. \n We've been using Docker BuildKit to improve our build times and image quality. \n What nobody tells you about Docker BuildKit is: \n it can parallelize your build process, reducing build times significantly. For example, our build time decreased from 10 minutes to 2 minutes. \n it can cache your build layers, so you don't have to rebuild everything from scratch. This saves us a lot of time and resources. \n it can automatically detect and optimize your build configuration, reducing the number of unnecessary layers. This makes our images smaller and more efficient. \n it can integrate with your CI/CD pipeline, making it easier to automate your build and deployment process. We use it with our GitHub Actions pipeline. \n What's your experience with Docker BuildKit?",
-      "hashtags": "#DockerBuildKit #DevOps #CI/CD",
-      "image_prompt": "A technical visual of a Docker BuildKit pipeline, on a dark background with cyan accents, in a clean and professional style",
-      "word_count": 133,
+      "day": "Tuesday 14 Jul",
+      "topic": "Podman vs Docker — practical differences after switching",
+      "hook": "After switching from Docker to Podman, we've seen a 30% reduction in memory usage",
+      "body": "Our team has been using Docker for years, but we recently switched to Podman.\n\nWhat nobody tells you is: \n1. Podman has a more efficient memory management system, which has resulted in a 30% reduction in memory usage for our containers. \n2. Podman doesn't require a daemon to run, which makes it more secure and easier to manage. \n3. Podman has better support for Kubernetes, with native support for Kubernetes APIs and resource management. \n4. Podman has a more flexible networking system, with support for multiple network interfaces and custom networking configurations.\n\nWhat unexpected benefits or challenges have you experienced after switching from Docker to Podman?",
+      "hashtags": "#Podman #Docker #Containerization",
+      "image_prompt": "A technical comparison chart showing the differences between Podman and Docker, with cyan accents highlighting the key differences, and a clean style with no watermarks.",
+      "word_count": 106,
       "status": "Draft",
-      "generated_at": "2026-07-04T09:26:44.421786+00:00"
+      "generated_at": "2026-07-11T08:51:04.633287+00:00"
     },
     {
-      "day": "Wednesday 08 Jul",
-      "topic": "How we manage base images across 40 microservices",
-      "hook": "I've standardized our base images across 40 microservices using a single pipeline",
-      "body": "Before, our team managed base images manually, which led to inconsistencies and security vulnerabilities. \n We had 40 different microservices, each with its own base image, and it was a maintenance nightmare. \n After implementing a standardized pipeline using GitHub Actions and Docker BuildKit, we were able to automate the process and reduce our image count to 5. \n We use a single pipeline to build and deploy all our base images, which ensures consistency and security across all our microservices. \n Our pipeline uses Docker BuildKit to build and push the images to our registry, and then we use ArgoCD to deploy them to our Kubernetes cluster. \n We've seen a significant reduction in image sprawl and security vulnerabilities, and our team is more productive. \n What's your strategy for managing base images?",
-      "hashtags": "#BaseImages #DevOps #Kubernetes",
-      "image_prompt": "A technical visual of a pipeline with a single source of truth for base images, on a dark background with green accents, in a minimal and professional style",
-      "word_count": 128,
+      "day": "Wednesday 15 Jul",
+      "topic": "How we enforce container image policies in Kubernetes",
+      "hook": "We've enforced container image policies in our Kubernetes cluster, reducing unapproved image deployments by 95%",
+      "body": "Before, our team didn't have a clear policy for container image management, which led to unapproved images being deployed to our cluster.\n\nAfter implementing a policy using Kyverno, we've seen a significant reduction in unapproved image deployments. We use Kyverno to define and enforce policies for our container images, including requirements for image signing and verification. \nOur policy ensures that only images that have been signed and verified by our CI/CD pipeline can be deployed to our cluster. \nWe've also implemented a policy to ensure that all images are up-to-date and patched, which has reduced our vulnerability to known security issues.\n\nWhat strategies have you used to enforce container image policies in your Kubernetes cluster?",
+      "hashtags": "#Kubernetes #ContainerSecurity #Kyverno",
+      "image_prompt": "A dark-themed diagram showing a container image policy enforcement process using Kyverno, with green accents highlighting the policy definition and enforcement components, and a minimal style with no watermarks.",
+      "word_count": 115,
       "status": "Draft",
-      "generated_at": "2026-07-04T09:26:44.421796+00:00"
+      "generated_at": "2026-07-11T08:51:04.633297+00:00"
     },
     {
-      "day": "Thursday 09 Jul",
-      "topic": "Container runtime comparison — Docker vs containerd vs CRI-O",
-      "hook": "I've compared the performance of Docker, containerd, and CRI-O in our production environment",
-      "body": "Many people think that Docker, containerd, and CRI-O are interchangeable, but they have different design centers and use cases. \n Myth: Docker is the only container runtime that supports Kubernetes. \n Reality: containerd and CRI-O are also supported by Kubernetes, and they have their own strengths and weaknesses. For example, containerd is more lightweight and efficient, while CRI-O is more secure and scalable. \n Myth: containerd is only for Docker. \n Reality: containerd is a standalone container runtime that can be used with or without Docker. We use it with our Kubernetes cluster. \n Myth: CRI-O is only for OpenShift. \n Reality: CRI-O is a container runtime that can be used with any Kubernetes distribution, including our own. \n What's your experience with container runtimes?",
-      "hashtags": "#ContainerRuntime #DevOps #Kubernetes",
-      "image_prompt": "A technical visual of a comparison table between Docker, containerd, and CRI-O, on a dark background with cyan accents, in a clean and professional style",
-      "word_count": 118,
+      "day": "Thursday 16 Jul",
+      "topic": "The difference between monitoring and observability — it actually matters",
+      "hook": "We've realized that monitoring and observability are not the same thing, and it's made a huge difference in our ability to debug issues",
+      "body": "Myth: Monitoring and observability are interchangeable terms.\n\nReality: Monitoring is about collecting metrics and logs, while observability is about understanding the behavior of your system. \nMyth: You can achieve observability with just monitoring tools.\n\nReality: Observability requires a combination of monitoring, logging, and tracing tools, as well as a deep understanding of your system's behavior. \nMyth: Observability is only for complex systems.\n\nReality: Observability is important for any system, regardless of complexity, as it allows you to understand and debug issues quickly. \nMyth: Monitoring is enough to detect issues.\n\nReality: Monitoring can detect issues, but observability is necessary to understand the root cause of issues and debug them effectively.\n\nWhat strategies have you used to achieve observability in your system, and how has it impacted your ability to debug issues?",
+      "hashtags": "#Monitoring #Observability #DevOps",
+      "image_prompt": "A technical comparison diagram showing the differences between monitoring and observability, with cyan accents highlighting the key differences, and a clean style with no watermarks.",
+      "word_count": 130,
       "status": "Draft",
-      "generated_at": "2026-07-04T09:26:44.421805+00:00"
+      "generated_at": "2026-07-11T08:51:04.633306+00:00"
     },
     {
-      "day": "Friday 10 Jul",
-      "topic": "How we debug running containers without SSH",
-      "hook": "I've spent countless hours debugging containers without SSH access",
-      "body": "Our team uses a variety of tools to debug running containers without SSH. \n We use Docker logs to view container output, Docker exec to run commands inside containers, Kubectl describe to view pod details, Kubernetes dashboard to monitor cluster activity, and Sysdig to capture system calls. \n For example, I use the command 'kubectl describe pod <pod_name>' to view detailed information about a pod, including its configuration, status, and events. \n I also use 'docker exec -it <container_id> /bin/bash' to run a command inside a container. \n Additionally, 'sysdig -c spy_container' helps me capture system calls made by a container. \n What tools do you use to debug containers without SSH?",
-      "hashtags": "#DevOps #Kubernetes #Containerization",
-      "image_prompt": "A dark background terminal window with green text, showing a Kubernetes dashboard and a Docker container running, with a sysdig command being executed, style: clean and minimal",
+      "day": "Friday 17 Jul",
+      "topic": "How I set up alerting that pages me only when it matters",
+      "hook": "I've spent countless nights debugging production outages at 2am, but now I sleep peacefully thanks to a well-configured alerting system",
+      "body": "I use Prometheus to monitor my Kubernetes cluster's performance metrics, such as CPU and memory usage. \n Grafana is used to visualize these metrics and set up alerts when thresholds are exceeded. \n I also utilize Alertmanager to route alerts to the right teams and avoid unnecessary pages. \n For example, to set up an alert for high CPU usage, I use the following Prometheus query: `sum(rate(container_cpu_usage_seconds_total{container_name!='POD',pod_name!=''}[1m])) > 0.5`. \n Additionally, I use PagerDuty to receive pages and track incident response times.",
+      "hashtags": "#Monitoring #Alerting #DevOps",
+      "image_prompt": "A dark background (#0d1117) screenshot of a Grafana dashboard with green (#00ff88) and cyan (#00d4ff) accents, displaying a Prometheus query and Alertmanager configuration",
+      "word_count": 78,
+      "status": "Draft",
+      "generated_at": "2026-07-11T08:52:25.577929+00:00"
+    },
+    {
+      "day": "Saturday 18 Jul",
+      "topic": "Distributed tracing with OpenTelemetry — getting started the right way",
+      "hook": "A recent outage in our distributed system took hours to debug, but OpenTelemetry helped us identify the root cause in minutes",
+      "body": "It started with a sudden spike in latency, and our team was baffled. \n We enabled OpenTelemetry in our application using the OpenTelemetry SDK, and configured it to send traces to Jaeger. \n We then used the Jaeger UI to visualize the trace data and identify the bottleneck. \n The debug process involved running the command `otellectl --exporter jaeger.thrift` to export the traces to Jaeger, and then using the Jaeger query `service.name = \"my-service\"` to filter the traces. \n We learned that a misconfigured database query was causing the latency, and fixed it by optimizing the query.",
+      "hashtags": "#DistributedTracing #OpenTelemetry #Jaeger",
+      "image_prompt": "A dark background (#0d1117) diagram of a distributed system with green (#00ff88) and cyan (#00d4ff) accents, showing the flow of trace data from the application to Jaeger",
+      "word_count": 93,
+      "status": "Draft",
+      "generated_at": "2026-07-11T08:52:25.577948+00:00"
+    },
+    {
+      "day": "Sunday 19 Jul",
+      "topic": "Why your dashboards are lying to you",
+      "hook": "I've seen too many dashboards that look beautiful but tell a false story about system performance",
+      "body": "As a DevOps engineer, I've learned that a good dashboard should be opinionated and show only the most relevant metrics. \n For example, instead of showing the average response time, it's better to show the 99th percentile response time. \n I use a simple rule: if a metric doesn't have a clear threshold or alert associated with it, it doesn't belong on the dashboard. \n A concrete example is a dashboard that shows the number of requests per second, but doesn't account for the number of errors. \n My advice is to prioritize metrics that have a clear impact on the system's performance and reliability, such as error rates and latency.",
+      "hashtags": "#Monitoring #Dashboards #DevOps",
+      "image_prompt": "A dark background (#0d1117) screenshot of a dashboard with green (#00ff88) and cyan (#00d4ff) accents, displaying a simple and opinionated set of metrics",
       "word_count": 107,
       "status": "Draft",
-      "generated_at": "2026-07-04T09:27:19.305851+00:00"
-    },
-    {
-      "day": "Saturday 11 Jul",
-      "topic": "Docker network modes — bridge vs host vs overlay explained",
-      "hook": "A recent incident where our Docker containers lost network connectivity taught me a valuable lesson",
-      "body": "It started when our team deployed a new service using Docker containers in host mode. \n However, we soon realized that the containers were unable to communicate with each other. \n After some debugging, we discovered that the issue was due to the Docker network mode. \n We switched to using an overlay network, which allowed the containers to communicate with each other. \n The command 'docker network create -d overlay <network_name>' created the overlay network. \n Then, we used 'docker run -it --net=<network_name> <image_name>' to run the containers in the overlay network. \n What is your experience with Docker network modes, and how do you handle container communication?",
-      "hashtags": "#Docker #Networking #DevOps",
-      "image_prompt": "A diagram showing the different Docker network modes, including bridge, host, and overlay, with a dark background and green accents, style: technical and informative",
-      "word_count": 103,
-      "status": "Draft",
-      "generated_at": "2026-07-04T09:27:19.305874+00:00"
-    },
-    {
-      "day": "Sunday 12 Jul",
-      "topic": "Building minimal Python containers — from 900MB to 80MB",
-      "hook": "I recently reduced the size of our Python container from 900MB to 80MB using a few simple tricks",
-      "body": "My advice to fellow engineers is to use multi-stage builds and only install necessary dependencies. \n For example, I use the command 'FROM python:3.9-slim AS builder' to create a builder stage, and then 'FROM python:3.9-alpine' to create a runtime stage. \n This approach allows me to install dependencies only in the builder stage, and then copy the required files to the runtime stage. \n I also use 'pip install --no-cache-dir' to avoid caching dependencies. \n Additionally, I use 'python -m venv' to create a virtual environment, which helps reduce the container size. \n What strategies do you use to minimize container sizes, and what benefits have you seen?",
-      "hashtags": "#Python #Containerization #DevOps",
-      "image_prompt": "A dark background terminal window with cyan text, showing a Dockerfile with a multi-stage build, and a graph comparing the sizes of the original and optimized containers, style: clean and professional",
-      "word_count": 103,
-      "status": "Draft",
-      "generated_at": "2026-07-04T09:27:19.305883+00:00"
+      "generated_at": "2026-07-11T08:52:25.577956+00:00"
     }
   ]
 }
