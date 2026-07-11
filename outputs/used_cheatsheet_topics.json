@@ -5,5 +5,6 @@
   "Kubernetes namespaces \u2014 commands and use cases",
   "Kubernetes services \u2014 ClusterIP, NodePort, LoadBalancer reference",
   "Kubernetes ConfigMaps and Secrets \u2014 create and consume reference",
-  "Kubernetes resource requests and limits \u2014 syntax and examples"
+  "Kubernetes resource requests and limits \u2014 syntax and examples",
+  "Kubernetes labels and selectors \u2014 patterns and commands"
 ]

@@ -1,141 +1,141 @@
 {
-  "topic": "Kubernetes resource requests and limits — syntax and examples",
-  "linkedin_hook": "Mastering Kubernetes resource management is crucial for optimizing your cluster's performance and efficiency, and I'm excited to share my top cheatsheet with you!",
-  "linkedin_intro": "As a senior DevOps engineer, I've worked with numerous teams to optimize their Kubernetes deployments, and I've compiled a list of essential commands and configurations to help you get started. In this cheatsheet, I'll share my expertise on Kubernetes resource requests and limits, including syntax and examples. Whether you're a beginner or an experienced engineer, this guide will help you streamline your workflow and improve your cluster's overall performance.",
+  "topic": "Kubernetes labels and selectors — patterns and commands",
+  "linkedin_hook": "Mastering Kubernetes labels and selectors is a game-changer for efficient cluster management, and I'm sharing my top commands and patterns to get you started!",
+  "linkedin_intro": "As a senior DevOps engineer, I've worked with numerous Kubernetes clusters and seen firsthand the impact of well-organized labels and selectors. In this cheatsheet, I'll share the most useful commands and patterns I've learned over the years. From basic syntax to advanced techniques, this guide covers everything you need to know to take your Kubernetes skills to the next level.",
   "sections": [
     {
-      "section_title": "Resource Requests and Limits Basics",
+      "section_title": "Basic Labels",
       "items": [
         {
-          "command": "kubectl get pods -o yaml",
-          "description": "Displays the YAML configuration of all pods in the current namespace, including resource requests and limits"
+          "command": "kubectl label pod <pod-name> <label-key>=<label-value>",
+          "description": "adds a new label to a pod with the specified key and value"
         },
         {
-          "command": "kubectl describe pod <pod_name>",
-          "description": "Provides detailed information about a specific pod, including its resource requests and limits"
+          "command": "kubectl label pod <pod-name> <label-key>-",
+          "description": "removes a label from a pod with the specified key"
         },
         {
-          "command": "kubectl get deployments -o yaml",
-          "description": "Displays the YAML configuration of all deployments in the current namespace, including resource requests and limits"
+          "command": "kubectl get pods -l <label-key>=<label-value>",
+          "description": "lists all pods with the specified label key and value"
         },
         {
-          "command": "kubectl get replicasets -o yaml",
-          "description": "Displays the YAML configuration of all replica sets in the current namespace, including resource requests and limits"
+          "command": "kubectl label node <node-name> <label-key>=<label-value>",
+          "description": "adds a new label to a node with the specified key and value"
         },
         {
-          "command": "kubectl get statefulsets -o yaml",
-          "description": "Displays the YAML configuration of all stateful sets in the current namespace, including resource requests and limits"
+          "command": "kubectl label node <node-name> --overwrite <label-key>=<label-value>",
+          "description": "overwrites an existing label on a node with the specified key and value"
         }
       ]
     },
     {
-      "section_title": "Configuring Resource Requests and Limits",
+      "section_title": "Label Selectors",
       "items": [
         {
-          "command": "kubectl patch deployment <deployment_name> -p '{\"spec\":{\"template\":{\"spec\":{\"containers\":[{\"name\":\"<container_name>\",\"resources\":{\"requests\":{\"cpu\":\"100m\",\"memory\":\"128Mi\"},\"limits\":{\"cpu\":\"200m\",\"memory\":\"256Mi\"}}}]}}}}'",
-          "description": "Updates the resource requests and limits of a specific container in a deployment"
+          "command": "kubectl get pods -l 'env in (dev, prod)'",
+          "description": "lists all pods with the label env set to either dev or prod"
         },
         {
-          "command": "kubectl patch pod <pod_name> -p '{\"spec\":{\"containers\":[{\"name\":\"<container_name>\",\"resources\":{\"requests\":{\"cpu\":\"100m\",\"memory\":\"128Mi\"},\"limits\":{\"cpu\":\"200m\",\"memory\":\"256Mi\"}}}]}}'",
-          "description": "Updates the resource requests and limits of a specific container in a pod"
+          "command": "kubectl get pods -l 'env notin (dev, prod)'",
+          "description": "lists all pods without the label env set to dev or prod"
         },
         {
-          "command": "kubectl apply -f <config_file>.yaml",
-          "description": "Applies a YAML configuration file to create or update resources, including resource requests and limits"
+          "command": "kubectl get pods -l 'env==dev'",
+          "description": "lists all pods with the label env set to dev"
         },
         {
-          "command": "kubectl create -f <config_file>.yaml",
-          "description": "Creates new resources from a YAML configuration file, including resource requests and limits"
+          "command": "kubectl get pods -l 'env!=dev'",
+          "description": "lists all pods without the label env set to dev"
         },
         {
-          "command": "kubectl replace -f <config_file>.yaml",
-          "description": "Replaces existing resources with new ones from a YAML configuration file, including resource requests and limits"
+          "command": "kubectl get pods -l 'env=~^dev'",
+          "description": "lists all pods with the label env starting with dev"
         }
       ]
     },
     {
-      "section_title": "Monitoring Resource Usage",
+      "section_title": "Set-Based Label Selectors",
       "items": [
         {
-          "command": "kubectl top pod <pod_name>",
-          "description": "Displays the resource usage of a specific pod, including CPU and memory usage"
+          "command": "kubectl get pods -l 'set=dev'",
+          "description": "lists all pods with the label set set to dev"
         },
         {
-          "command": "kubectl top node <node_name>",
-          "description": "Displays the resource usage of a specific node, including CPU and memory usage"
+          "command": "kubectl get pods -l '!set=dev'",
+          "description": "lists all pods without the label set set to dev"
         },
         {
-          "command": "kubectl get --raw /apis/metrics.k8s.io/v1beta1/pods",
-          "description": "Displays the raw metrics data for all pods in the current namespace, including resource usage"
+          "command": "kubectl get pods -l 'set in (dev, prod)'",
+          "description": "lists all pods with the label set set to either dev or prod"
         },
         {
-          "command": "kubectl get --raw /apis/metrics.k8s.io/v1beta1/nodes",
-          "description": "Displays the raw metrics data for all nodes in the cluster, including resource usage"
+          "command": "kubectl get pods -l 'set notin (dev, prod)'",
+          "description": "lists all pods without the label set set to dev or prod"
         },
         {
-          "command": "kubectl get --raw /apis/metrics.k8s.io/v1beta1/nodes/<node_name>",
-          "description": "Displays the raw metrics data for a specific node, including resource usage"
+          "command": "kubectl get pods -l 'set==dev'",
+          "description": "lists all pods with the label set set to dev"
         }
       ]
     },
     {
-      "section_title": "Resource Quotas and Limits",
+      "section_title": "Resource Management",
       "items": [
         {
-          "command": "kubectl create resourcequota <quota_name> --hard=cpu=100m,memory=128Mi",
-          "description": "Creates a new resource quota with specific limits for CPU and memory"
+          "command": "kubectl get deployments -l <label-key>=<label-value>",
+          "description": "lists all deployments with the specified label key and value"
         },
         {
-          "command": "kubectl create limitrange <limitrange_name> --type=pod --min=cpu=100m,memory=128Mi --max=cpu=200m,memory=256Mi",
-          "description": "Creates a new limit range with specific minimum and maximum limits for CPU and memory"
+          "command": "kubectl get replicasets -l <label-key>=<label-value>",
+          "description": "lists all replica sets with the specified label key and value"
         },
         {
-          "command": "kubectl get resourcequota <quota_name> -o yaml",
-          "description": "Displays the YAML configuration of a specific resource quota, including limits"
+          "command": "kubectl get pods -l <label-key>=<label-value> -o wide",
+          "description": "lists all pods with the specified label key and value in wide format"
         },
         {
-          "command": "kubectl get limitrange <limitrange_name> -o yaml",
-          "description": "Displays the YAML configuration of a specific limit range, including minimum and maximum limits"
+          "command": "kubectl get pods -l <label-key>=<label-value> -o jsonpath='{.items[*].metadata.name}'",
+          "description": "lists all pod names with the specified label key and value"
         },
         {
-          "command": "kubectl patch resourcequota <quota_name> -p '{\"spec\":{\"hard\":{\"cpu\":\"200m\",\"memory\":\"256Mi\"}}}'",
-          "description": "Updates the limits of a specific resource quota"
+          "command": "kubectl delete pods -l <label-key>=<label-value>",
+          "description": "deletes all pods with the specified label key and value"
         }
       ]
     },
     {
-      "section_title": "Horizontal Pod Autoscaling",
+      "section_title": "Advanced Label Management",
       "items": [
         {
-          "command": "kubectl autoscale deployment <deployment_name> --min=1 --max=10 --cpu-percent=50",
-          "description": "Creates a new horizontal pod autoscaler for a deployment, scaling based on CPU usage"
+          "command": "kubectl label --dry-run --overwrite pod <pod-name> <label-key>=<label-value>",
+          "description": "simulates adding a new label to a pod with the specified key and value without applying the changes"
         },
         {
-          "command": "kubectl autoscale deployment <deployment_name> --min=1 --max=10 --metric=<metric_name>",
-          "description": "Creates a new horizontal pod autoscaler for a deployment, scaling based on a custom metric"
+          "command": "kubectl label --record pod <pod-name> <label-key>=<label-value>",
+          "description": "adds a new label to a pod with the specified key and value and records the change in the resource annotation"
         },
         {
-          "command": "kubectl get hpa <hpa_name> -o yaml",
-          "description": "Displays the YAML configuration of a specific horizontal pod autoscaler, including scaling rules"
+          "command": "kubectl label --all pod <label-key>=<label-value>",
+          "description": "adds a new label to all pods with the specified key and value"
         },
         {
-          "command": "kubectl describe hpa <hpa_name>",
-          "description": "Provides detailed information about a specific horizontal pod autoscaler, including scaling history"
+          "command": "kubectl label --all --overwrite pod <label-key>=<label-value>",
+          "description": "overwrites an existing label on all pods with the specified key and value"
         },
         {
-          "command": "kubectl patch hpa <hpa_name> -p '{\"spec\":{\"minReplicas\":1,\"maxReplicas\":10,\"metrics\":[{\"type\":\"Resource\",\"resource\":{\"name\":\"cpu\",\"target\":{\"type\":\"Utilization\",\"averageUtilization\":50}}}]}}'",
-          "description": "Updates the scaling rules of a specific horizontal pod autoscaler"
+          "command": "kubectl label --selector=<label-key>=<label-value> pod <label-key>=<label-value>",
+          "description": "adds a new label to all pods matching the specified selector with the specified key and value"
         }
       ]
     }
   ],
   "pro_tips": [
-    "Use the `kubectl top` command to monitor resource usage and identify bottlenecks in your cluster\n",
-    "Configure resource requests and limits for your containers to ensure efficient resource allocation and prevent overcommitting\n",
-    "Implement horizontal pod autoscaling to dynamically adjust the number of replicas based on resource usage and other metrics\n",
-    "Use the `kubectl patch` command to update resource requests and limits for existing resources, rather than recreating them from scratch"
+    "Use the --dry-run flag to test label updates before applying them to your cluster, for example: kubectl label --dry-run --overwrite pod <pod-name> <label-key>=<label-value>",
+    "Utilize the --record flag to keep track of changes made to your resources, for example: kubectl label --record pod <pod-name> <label-key>=<label-value>",
+    "Leverage set-based label selectors to simplify complex queries, for example: kubectl get pods -l 'set in (dev, prod)'",
+    "Take advantage of the -o jsonpath flag to extract specific information from your resources, for example: kubectl get pods -l <label-key>=<label-value> -o jsonpath='{.items[*].metadata.name}'"
   ],
-  "linkedin_cta": "What are your favorite Kubernetes resource management tips and tricks? Share your expertise in the comments below!",
+  "linkedin_cta": "What are your favorite Kubernetes label and selector patterns? Share your expertise in the comments below!",
   "hashtags": "#Kubernetes #DevOps #Containerization #CloudNative",
-  "image_prompt": "Create a professional cheatsheet graphic with a dark background #0d1117, using a monospace font. The header should display the tool or technology name 'Kubernetes' in cyan #00d4ff. The graphic should feature an organized grid layout, with command blocks displaying green #00ff88 command text and white description text. The design should be clean and minimal, with no watermark, and suitable for a LinkedIn carousel first slide. The cheatsheet should include the following sections: Resource Requests and Limits Basics, Configuring Resource Requests and Limits, Monitoring Resource Usage, Resource Quotas and Limits, and Horizontal Pod Autoscaling."
+  "image_prompt": "Generate a professional cheatsheet graphic with a dark background #0d1117, monospace font, and the tool name 'Kubernetes' as the header in cyan #00d4ff. Organize the commands into a grid layout with green #00ff88 command text and white description text. Ensure a clean, minimal design with no watermarks, suitable for a LinkedIn carousel first slide. The graphic should have a professional DevOps aesthetic and be easily readable on various devices."
 }
