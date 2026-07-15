@@ -2,7 +2,7 @@ name: 3 — Weekly cheatsheet generation
 
 on:
   schedule:
-    - cron: '45 7 * * 6'
+    # - cron: '45 7 * * 6'
   workflow_dispatch:
 
 jobs:
