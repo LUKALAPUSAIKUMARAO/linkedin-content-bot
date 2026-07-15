@@ -2,7 +2,7 @@ name: 1 — Weekly content generation
 
 on:
   schedule:
-    - cron: '0 7 * * 6'
+    # - cron: '0 7 * * 6'
   workflow_dispatch:
 
 jobs:
